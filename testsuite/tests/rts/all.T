@@ -429,3 +429,5 @@ test('InitEventLogging',
      compile_and_run, ['-eventlog InitEventLogging_c.c'])
 
 test('T20199', normal, makefile_test, [])
+
+test('T15427', normal, compile_and_run, [''])
