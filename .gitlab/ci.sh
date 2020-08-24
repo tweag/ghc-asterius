@@ -14,6 +14,30 @@ fi
 
 source $TOP/.gitlab/common.sh
 
+function setup_locale() {
+  # BSD grep terminates early with -q, consequently locale -a will get a
+  # SIGPIPE and the pipeline will fail with pipefail.
+  shopt -o -u pipefail
+  if locale -a | grep -q C.UTF-8; then
+    # Debian
+    export LANG=C.UTF-8
+  elif locale -a | grep -q C.utf8; then
+    # Fedora calls it this
+    export LANG=C.utf8
+  elif locale -a | grep -q en_US.UTF-8; then
+    # Centos doesn't have C.UTF-8
+    export LANG=en_US.UTF-8
+  else
+    error "Failed to find usable locale"
+    info "Available locales:"
+    locale -a
+    fail "No usable locale, aborting..."
+  fi
+  info "Using locale $LANG..."
+  export LC_ALL=$LANG
+  shopt -o -s pipefail
+}
+
 function mingw_init() {
   case "$MSYSTEM" in
     MINGW32)
@@ -386,6 +410,8 @@ function shell() {
   fi
   run $cmd
 }
+
+setup_locale
 
 # Determine Cabal data directory
 case "$(uname)" in
