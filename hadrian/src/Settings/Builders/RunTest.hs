@@ -140,7 +140,7 @@ runTestBuilderArgs = builder RunTest ? do
             , arg "--config", arg $ "timeout_prog=" ++ show (top -/- timeoutProg)
             , arg "--config", arg $ "stats_files_dir=" ++ statsFilesDir
             , arg $ "--threads=" ++ show threads
-            , emitWhenSet testEnv $ \env -> arg ("--test-env=" ++ show env)
+            , emitWhenSet testEnv $ \env -> arg ("--test-env=" ++ env)
             , emitWhenSet testMetricsFile $ \file -> arg ("--metrics-file=" ++ file)
             , getTestArgs -- User-provided arguments from command line.
             ]
