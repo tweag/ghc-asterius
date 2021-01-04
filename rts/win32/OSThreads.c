@@ -614,3 +614,13 @@ KernelThreadId kernelThreadId (void)
     DWORD tid = GetCurrentThreadId();
     return tid;
 }
+
+bool
+timedWaitCondition ( Condition* pCond, Mutex* pMut, Time timeout )
+{
+  // If we pass a timeout of 0 SleepConditionVariableSRW will return immediately
+  // https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleepconditionvariablesrw
+  DWORD ms = (DWORD)stg_min(1, TimeToMS(timeout));
+  SleepConditionVariableSRW(pCond, pMut, ms, 0);
+  return true;
+}
