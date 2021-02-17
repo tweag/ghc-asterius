@@ -164,7 +164,7 @@ static bool scheduleHandleThreadFinished( Capability *cap, Task *task,
                                           StgTSO *t );
 static bool scheduleNeedHeapProfile(bool ready_to_gc);
 static void scheduleDoGC( Capability **pcap, Task *task,
-                          bool force_major, bool deadlock_detect );
+                          bool force_major, bool is_overflow_gc, bool deadlock_detect );
 
 static void deleteThread (StgTSO *tso);
 static void deleteAllThreads (void);
@@ -264,7 +264,7 @@ schedule (Capability *initialCapability, Task *task)
     case SCHED_INTERRUPTING:
         debugTrace(DEBUG_sched, "SCHED_INTERRUPTING");
         /* scheduleDoGC() deletes all the threads */
-        scheduleDoGC(&cap,task,true,false);
+        scheduleDoGC(&cap,task,true,false,false);
 
         // after scheduleDoGC(), we must be shutting down.  Either some
         // other Capability did the final GC, or we did it above,
@@ -561,7 +561,7 @@ run_thread:
     }
 
     if (ready_to_gc || scheduleNeedHeapProfile(ready_to_gc)) {
-      scheduleDoGC(&cap,task,false,false);
+      scheduleDoGC(&cap,task,false,ready_to_gc,false);
     }
   } /* end of while() */
 }
@@ -932,7 +932,7 @@ scheduleDetectDeadlock (Capability **pcap, Task *task)
         // they are unreachable and will therefore be sent an
         // exception.  Any threads thus released will be immediately
         // runnable.
-        scheduleDoGC (pcap, task, true/*force major GC*/, true/*deadlock detection*/);
+        scheduleDoGC (pcap, task, true/*force major GC*/, false /* Whether it is an overflow GC */, true/*deadlock detection*/);
         cap = *pcap;
         // when force_major == true. scheduleDoGC sets
         // recent_activity to ACTIVITY_DONE_GC and turns off the timer
@@ -1002,7 +1002,7 @@ scheduleProcessInbox (Capability **pcap USED_IF_THREADS)
     while (!emptyInbox(cap)) {
         // Executing messages might use heap, so we should check for GC.
         if (doYouWantToGC(cap)) {
-            scheduleDoGC(pcap, cap->running_task, false, false);
+            scheduleDoGC(pcap, cap->running_task, false, false, false);
             cap = *pcap;
         }
 
@@ -1553,7 +1553,7 @@ void releaseAllCapabilities(uint32_t n, Capability *keep_cap, Task *task)
 // behind deadlock_detect argument.
 static void
 scheduleDoGC (Capability **pcap, Task *task USED_IF_THREADS,
-              bool force_major, bool deadlock_detect)
+              bool force_major, bool is_overflow_gc, bool deadlock_detect)
 {
     Capability *cap = *pcap;
     bool heap_census;
@@ -1846,9 +1846,9 @@ delete_threads_and_gc:
     // emerge they don't immediately re-enter the GC.
     pending_sync = 0;
     signalCondition(&sync_finished_cond);
-    GarbageCollect(collect_gen, heap_census, deadlock_detect, gc_type, cap, idle_cap);
+    GarbageCollect(collect_gen, heap_census, is_overflow_gc, deadlock_detect, gc_type, cap, idle_cap);
 #else
-    GarbageCollect(collect_gen, heap_census, deadlock_detect, 0, cap, NULL);
+    GarbageCollect(collect_gen, heap_census, is_overflow_gc, deadlock_detect, 0, cap, NULL);
 #endif
 
     // If we're shutting down, don't leave any idle GC work to do.
@@ -2730,7 +2730,7 @@ exitScheduler (bool wait_foreign USED_IF_THREADS)
         nonmovingStop();
         Capability *cap = task->cap;
         waitForCapability(&cap,task);
-        scheduleDoGC(&cap,task,true,false);
+        scheduleDoGC(&cap,task,true,false,false);
         ASSERT(task->incall->tso == NULL);
         releaseCapability(cap);
     }
@@ -2798,7 +2798,7 @@ performGC_(bool force_major)
     // TODO: do we need to traceTask*() here?
 
     waitForCapability(&cap,task);
-    scheduleDoGC(&cap,task,force_major,false);
+    scheduleDoGC(&cap,task,force_major,false,false);
     releaseCapability(cap);
     boundTaskExiting(task);
 }
