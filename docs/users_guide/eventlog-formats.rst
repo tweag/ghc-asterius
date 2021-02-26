@@ -210,6 +210,60 @@ Thread and scheduling events
 Garbage collector events
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+The following events mark various points of the lifecycle of a moving garbage
+collection.
+
+A typical garbage collection will look something like the following:
+
+1. A capability realizes that it needs a garbage collection (e.g. as a result
+   of running out of nursery) and requests a garbage collection.  This is
+   marked by :event-type:`REQUEST_SEQ_GC` or :event-type:`REQUEST_PAR_GC`.
+
+2. As other capabilities reach yield points and suspend execution they emit
+   :event-type:`STOP_THREAD` events.
+
+3. When all capabilities have suspended execution, collection will begin,
+   marked by a :event-type:`GC_START` event.
+
+4. As individual parallel GC threads commence with scavenging they will emit
+   :event-type:`GC_WORK` events.
+
+5. If a parallel GC thread runs out of work it will emit a
+   :event-type:`GC_IDLE` event. If it is later handed more work it will emit
+   another :event-type:`GC_WORK` event.
+
+6. Eventually when scavenging has finished a :event-type:`GC_DONE` event
+   will be emitted by each GC thread.
+
+7. A bit of book-keeping is performed.
+
+8. A :event-type:`GC_END` event will be emitted marking the end of the GC cycle.
+
+9. A :event-type:`HEAP_SIZE` event will be emitted giving the
+   cumulative heap allocations of the program until now.
+
+10. A :event-type:`GC_STATS_GHC` event will be emitted
+   containing various details of the collection and heap state.
+
+11. In the case of a major collection, a
+    :event-type:`HEAP_LIVE` event will be emitted describing
+    the current size of the live on-heap data.
+
+12. In the case of the :ghc-flag:`-threaded` RTS, a
+    :event-type:`SPARK_COUNTERS` event will be emitted giving
+    details on how many sparks have been created, evaluated, and GC'd.
+
+13. As mutator threads resume execution they will emit :event-type:`RUN_THREAD`
+    events.
+
+14. A :event-type:`MEM_RETURN` event will be emitted containing details about
+    currently live mblocks, how many we think we need and whether we could return
+    excess to the OS.
+
+Note that in the case of the concurrent non-moving collector additional events
+will be emitted during the concurrent phase of collection. These are described
+in :ref:`nonmoving-gc-events`.
+
 .. event-type:: GC_START
 
    :tag: 9
@@ -267,13 +321,14 @@ Garbage collector events
    :field Word16: generation of collection
    :field Word64: bytes copied
    :field Word64: bytes of slop found
-   :field Word64: TODO
+   :field Word64: bytes of fragmentation, the difference between total mblock size
+                  and total block size. When all mblocks are full of full blocks,
+                  this number is 0.
    :field Word64: number of parallel garbage collection threads
    :field Word64: maximum number of bytes copied by any single collector thread
    :field Word64: total bytes copied by all collector threads
 
-   Report various information about the heap configuration. Typically produced
-   during RTS initialization..
+   Report various information about a major collection.
 
 .. event-type:: GC_GLOBAL_SYNC
 
@@ -281,6 +336,21 @@ Garbage collector events
    :length: fixed
 
    TODO
+
+.. event-type:: MEM_RETURN
+
+   :tag: 90
+   :length: fixed
+   :field CapSetId: heap capability set
+   :field Word32: currently allocated mblocks
+   :field Word32: the number of mblocks we would like to retain
+   :field Word32: the number of mblocks which we returned to the OS
+
+   Report information about currently allocation megablocks and attempts
+   made to return them to the operating system. If your heap is fragmented
+   then the current value will be greater than needed value but returned will
+   be less than the difference between the two.
+
 
 Heap events and statistics
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
