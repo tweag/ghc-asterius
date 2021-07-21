@@ -63,31 +63,28 @@ closeCondition( Condition* pCond )
   return;
 }
 
-bool
+void
 broadcastCondition ( Condition* pCond )
 {
   PulseEvent(*pCond);
-  return true;
 }
 
-bool
+void
 signalCondition ( Condition* pCond )
 {
     if (SetEvent(*pCond) == 0) {
         sysErrorBelch("SetEvent");
         stg_exit(EXIT_FAILURE);
     }
-    return true;
 }
 
-bool
+void
 waitCondition ( Condition* pCond, Mutex* pMut )
 {
   RELEASE_LOCK(pMut);
   WaitForSingleObject(*pCond, INFINITE);
   /* Hmm..use WaitForMultipleObjects() ? */
   ACQUIRE_LOCK(pMut);
-  return true;
 }
 
 void
@@ -621,6 +618,12 @@ timedWaitCondition ( Condition* pCond, Mutex* pMut, Time timeout )
   // If we pass a timeout of 0 SleepConditionVariableSRW will return immediately
   // https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleepconditionvariablesrw
   DWORD ms = (DWORD)stg_min(1, TimeToMS(timeout));
-  SleepConditionVariableSRW(pCond, pMut, ms, 0);
-  return true;
+  BOOL res = SleepConditionVariableSRW(pCond, pMut, ms, 0);
+  if (res) {
+    return true; // success
+  } else if (GetLastError() == ERROR_TIMEOUT) {
+    return false; // timeout
+  } else {
+    barf("timedWaitCondition: error %" FMT_Word, (StgWord) GetLastError());
+  }
 }
