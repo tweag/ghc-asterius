@@ -4,6 +4,7 @@
 --     refer to *types*, rather than *code*
 
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE RankNTypes #-}
 module Hooks ( Hooks
              , emptyHooks
              , lookupHook
@@ -21,6 +22,7 @@ module Hooks ( Hooks
              , runRnSpliceHook
              , getValueSafelyHook
              , createIservProcessHook
+             , codeOutputHook
              ) where
 
 import GhcPrelude
@@ -44,6 +46,9 @@ import Type
 import System.Process
 import BasicTypes
 import GHC.Hs.Extension
+import Cmm
+import Module
+import Stream
 
 import Data.Maybe
 
@@ -73,6 +78,7 @@ emptyHooks = Hooks
   , runRnSpliceHook        = Nothing
   , getValueSafelyHook     = Nothing
   , createIservProcessHook = Nothing
+  , codeOutputHook         = Nothing
   }
 
 data Hooks = Hooks
@@ -95,6 +101,10 @@ data Hooks = Hooks
   , getValueSafelyHook     :: Maybe (HscEnv -> Name -> Type
                                                           -> IO (Maybe HValue))
   , createIservProcessHook :: Maybe (CreateProcess -> IO ProcessHandle)
+  , codeOutputHook :: forall a . Maybe (DynFlags -> Module -> FilePath
+           -> ModLocation -> ForeignStubs -> [(ForeignSrcLang, FilePath)]
+           -> [InstalledUnitId] -> Stream IO RawCmmGroup a
+           -> IO (FilePath, (Bool, Maybe FilePath), [(ForeignSrcLang, FilePath)], a))
   }
 
 getHooked :: (Functor f, HasDynFlags f) => (Hooks -> Maybe a) -> a -> f a
