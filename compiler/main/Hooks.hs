@@ -23,6 +23,11 @@ module Hooks ( Hooks
              , getValueSafelyHook
              , createIservProcessHook
              , codeOutputHook
+             , startIServHook
+             , iservCallHook
+             , readIServHook
+             , writeIServHook
+             , stopIServHook
              ) where
 
 import GhcPrelude
@@ -47,10 +52,13 @@ import System.Process
 import BasicTypes
 import GHC.Hs.Extension
 import Cmm
+import GHCi.Message
 import Module
 import Stream
 
+import Data.Binary
 import Data.Maybe
+import Type.Reflection (Typeable)
 
 {-
 ************************************************************************
@@ -79,6 +87,11 @@ emptyHooks = Hooks
   , getValueSafelyHook     = Nothing
   , createIservProcessHook = Nothing
   , codeOutputHook         = Nothing
+  , startIServHook         = Nothing
+  , iservCallHook          = Nothing
+  , readIServHook          = Nothing
+  , writeIServHook         = Nothing
+  , stopIServHook          = Nothing
   }
 
 data Hooks = Hooks
@@ -105,6 +118,11 @@ data Hooks = Hooks
            -> ModLocation -> ForeignStubs -> [(ForeignSrcLang, FilePath)]
            -> [InstalledUnitId] -> Stream IO RawCmmGroup a
            -> IO (FilePath, (Bool, Maybe FilePath), [(ForeignSrcLang, FilePath)], a))
+  , startIServHook         :: Maybe (HscEnv -> IO IServ)
+  , iservCallHook          :: forall a . (Binary a, Typeable a) => Maybe (HscEnv -> IServ -> Message a -> IO a)
+  , readIServHook          :: forall a . (Binary a, Typeable a) => Maybe (HscEnv -> IServ -> IO a)
+  , writeIServHook         :: forall a . (Binary a, Typeable a) => Maybe (HscEnv -> IServ -> a -> IO ())
+  , stopIServHook          :: Maybe (HscEnv -> IO ())
   }
 
 getHooked :: (Functor f, HasDynFlags f) => (Hooks -> Maybe a) -> a -> f a

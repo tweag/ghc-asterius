@@ -269,7 +269,7 @@ data THMessage a where
 
 deriving instance Show (THMessage a)
 
-data THMsg = forall a . (Binary a, Show a) => THMsg (THMessage a)
+data THMsg = forall a . (Binary a, Show a, Typeable a) => THMsg (THMessage a)
 
 getTHMessage :: Get THMsg
 getTHMessage = do
@@ -326,6 +326,9 @@ putTHMessage m = case m of
   AddCorePlugin a             -> putWord8 21 >> put a
   ReifyType a                 -> putWord8 22 >> put a
 
+instance Binary THMsg where
+  get = getTHMessage
+  put (THMsg m) = putTHMessage m
 
 data EvalOpts = EvalOpts
   { useSandboxThread :: Bool
@@ -448,7 +451,7 @@ instance Binary ClosureType
 instance Binary PrimType
 instance Binary a => Binary (GenClosure a)
 
-data Msg = forall a . (Binary a, Show a) => Msg (Message a)
+data Msg = forall a . (Binary a, Show a, Typeable a) => Msg (Message a)
 
 getMessage :: Get Msg
 getMessage = do
@@ -534,6 +537,10 @@ putMessage m = case m of
   GetClosure a                -> putWord8 35 >> put a
   Seq a                       -> putWord8 36 >> put a
   RtsRevertCAFs               -> putWord8 37
+
+instance Binary Msg where
+  get = getMessage
+  put (Msg m) = putMessage m
 
 -- -----------------------------------------------------------------------------
 -- Reading/writing messages
