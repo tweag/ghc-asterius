@@ -32,6 +32,7 @@ import ErrUtils
 import Outputable
 import Module
 import SrcLoc
+import Hooks
 
 import Control.Exception
 import System.Directory
@@ -46,7 +47,7 @@ import System.IO
 ************************************************************************
 -}
 
-codeOutput :: DynFlags
+codeOutput, codeOutput' :: DynFlags
            -> Module
            -> FilePath
            -> ModLocation
@@ -60,7 +61,8 @@ codeOutput :: DynFlags
                   [(ForeignSrcLang, FilePath)]{-foreign_fps-},
                   a)
 
-codeOutput dflags this_mod filenm location foreign_stubs foreign_fps pkg_deps
+codeOutput dflags = lookupHook codeOutputHook codeOutput' dflags dflags
+codeOutput' dflags this_mod filenm location foreign_stubs foreign_fps pkg_deps
   cmm_stream
   =
     do  {
