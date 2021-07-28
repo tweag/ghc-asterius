@@ -203,7 +203,7 @@ def check_build_mk():
                 https://gitlab.haskell.org/ghc/ghc/wikis/building/using#build-configuration
             """))
 
-check_for_url_rewrites()
+#check_for_url_rewrites()
 check_boot_packages()
 if not args.hadrian:
     boot_pkgs()
