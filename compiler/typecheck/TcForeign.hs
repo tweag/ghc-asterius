@@ -15,21 +15,7 @@ module checks to see if a foreign declaration has got a legal type.
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module TcForeign
-        ( tcForeignImports
-        , tcForeignExports
-
-        -- Low-level exports for hooks
-        , isForeignImport, isForeignExport
-        , tcFImport, tcFExport
-        , tcForeignImports'
-        , tcCheckFIType, checkCTarget, checkForeignArgs, checkForeignRes
-        , normaliseFfiType
-        , nonIOok, mustBeIO
-        , checkSafe, noCheckSafe
-        , tcForeignExports'
-        , tcCheckFEType
-        ) where
+module TcForeign where
 
 #include "HsVersions.h"
 
