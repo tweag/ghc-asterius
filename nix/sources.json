@@ -11,6 +11,18 @@
         "url": "https://github.com/input-output-hk/haskell.nix/archive/41dfc558cfc88a97ca9c7fcbfed10399f405ea89.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "hs-nix-tools": {
+        "branch": "master",
+        "description": null,
+        "homepage": null,
+        "owner": "TerrorJack",
+        "repo": "hs-nix-tools",
+        "rev": "a922abb7ecffa678c830dd3198a422787d156f0f",
+        "sha256": "1waj70r475kha8wyk6fk729ai21hqykc1phw0vsvyjy5h3l43ywx",
+        "type": "tarball",
+        "url": "https://github.com/TerrorJack/hs-nix-tools/archive/a922abb7ecffa678c830dd3198a422787d156f0f.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "nixpkgs": {
         "branch": "nixpkgs-unstable",
         "description": "Nix Packages collection",
