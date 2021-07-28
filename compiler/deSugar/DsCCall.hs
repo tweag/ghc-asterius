@@ -7,13 +7,7 @@ Desugaring foreign calls
 -}
 
 {-# LANGUAGE CPP #-}
-module DsCCall
-        ( dsCCall
-        , mkFCall
-        , unboxArg
-        , boxResult
-        , resultWrapper
-        ) where
+module DsCCall where
 
 #include "HsVersions.h"
 

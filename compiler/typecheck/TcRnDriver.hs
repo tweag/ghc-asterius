@@ -92,7 +92,7 @@ import HeaderInfo       ( mkPrelImports )
 import TcDefaults
 import TcEnv
 import TcRules
-import TcForeign
+import TcForeign hiding (check)
 import TcInstDcls
 import TcIface
 import TcMType
