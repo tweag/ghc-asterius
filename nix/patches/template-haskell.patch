@@ -1,0 +1,28 @@
+--- a/libraries/template-haskell/template-haskell.cabal
++++ b/libraries/template-haskell/template-haskell.cabal
+@@ -2,7 +2,7 @@
+ -- ../../configure.  Make sure you are editing template-haskell.cabal.in, not
+ -- template-haskell.cabal.
+
+-name:           template-haskell
++name:           template-haskell-asterius
+ version:        2.16.0.0
+ -- NOTE: Don't forget to update ./changelog.md
+ license:        BSD3
+@@ -56,7 +56,7 @@
+
+     build-depends:
+         base        >= 4.11 && < 4.15,
+-        ghc-boot-th == 8.10.7,
++        ghc-boot-th-asterius == 8.10.7,
+         ghc-prim,
+         pretty      == 1.1.*
+
+@@ -64,7 +64,6 @@
+
+     -- We need to set the unit ID to template-haskell (without a
+     -- version number) as it's magic.
+-    ghc-options: -this-unit-id template-haskell
+
+     -- This should match the default-extensions used in 'ghc.cabal'. This way,
+     -- GHCi can be used to load it along with the compiler.

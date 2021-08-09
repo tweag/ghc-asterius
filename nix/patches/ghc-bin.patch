@@ -1,0 +1,54 @@
+--- a/ghc/ghc-bin.cabal
++++ b/ghc/ghc-bin.cabal
+@@ -1,7 +1,7 @@
+ -- WARNING: ghc-bin.cabal is automatically generated from ghc-bin.cabal.in by
+ -- ./configure.  Make sure you are editing ghc-bin.cabal.in, not ghc-bin.cabal.
+
+-Name: ghc-bin
++Name: ahc-bin
+ Version: 8.10.7
+ Copyright: XXX
+ -- License: XXX
+@@ -14,14 +14,12 @@
+     This package contains the @ghc@ executable, the user facing front-end
+     to the Glasgow Haskell Compiler.
+ Category: Development
+-Data-Dir: ..
+-Data-Files: settings
+ Build-Type: Simple
+ Cabal-Version: >=1.10
+
+ Flag ghci
+     Description: Build GHCi support.
+-    Default: False
++    Default: True
+     Manual: True
+
+ Flag threaded
+@@ -34,13 +32,14 @@
+
+     Main-Is: Main.hs
+     Build-Depends: base       >= 4   && < 5,
+-                   ghc        == 8.10.7
++                   ghc-asterius        == 8.10.7
+
+     C-Sources: hschooks.c
+
+     GHC-Options: -Wall
+                  -Wnoncanonical-monad-instances
+                  -Wnoncanonical-monoid-instances
++                 -no-hs-main
+
+     -- The flag being True by default, this reflects the
+     -- mk/config.mk.in logic for GhcThreaded (which ends up
+--- a/ghc/hschooks.c
++++ b/ghc/hschooks.c
+@@ -4,7 +4,7 @@
+ in instead of the defaults.
+ */
+
+-#include "../rts/PosixSource.h"
++#include "PosixSource.h"
+
+ /*
+  * This should be linked against Rts.h from the compiler which is compiling us.
