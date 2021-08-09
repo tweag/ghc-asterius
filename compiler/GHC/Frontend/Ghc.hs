@@ -981,7 +981,7 @@ link statically.
 --
 -- Skipping the foreign call fixes this problem, and the outer GHCi
 -- should have already made this call anyway.
-#if defined(GHC_LOADED_INTO_GHCI)
+#if 1
 initGCStatistics :: IO ()
 initGCStatistics = return ()
 #else

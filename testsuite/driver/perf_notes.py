@@ -36,7 +36,7 @@ def inside_git_repo() -> bool:
             subprocess.check_call(['git', 'rev-parse', 'HEAD'],
                                 stdout=subprocess.DEVNULL)
             _inside_git_repo_cache = True
-        except subprocess.CalledProcessError:
+        except:
             _inside_git_repo_cache = False
     return _inside_git_repo_cache
 
