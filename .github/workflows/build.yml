@@ -1,0 +1,58 @@
+name: build
+
+on:
+  - push
+  - pull_request
+
+jobs:
+
+  build:
+    name: build-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-11
+    steps:
+
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: setup-nix
+        uses: cachix/install-nix-action@v14
+        with:
+          extra_nix_config: |
+            substituters = https://cache.nixos.org https://hydra.iohk.io
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=
+
+      - name: setup-cachix
+        uses: cachix/cachix-action@v10
+        with:
+          name: asterius
+          signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
+
+      - name: cachix-watch-store
+        run: |
+          cachix watch-store -c9 asterius &
+
+      - name: check
+        run: |
+          nix-build --keep-going --no-out-link nix/check.nix
+
+      - name: push
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          mkdir ${{ runner.temp }}/dist
+          cp -rT $(nix-build --no-out-link nix/src.nix) ${{ runner.temp }}/dist
+          pushd ${{ runner.temp }}/dist
+          git init -b dist
+          git add --all
+          git config --global user.name "Cheng Shao"
+          git config --global user.email "cheng.shao@tweag.io"
+          git commit -m dist
+          git push --force --set-upstream https://${{ github.actor }}:${{ github.token }}@github.com/${{ github.repository }}.git dist
+          popd

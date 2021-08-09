@@ -1,0 +1,26 @@
+--- a/utils/ghc-pkg/ghc-pkg.cabal
++++ b/utils/ghc-pkg/ghc-pkg.cabal
+@@ -1,4 +1,4 @@
+-Name: ghc-pkg
++Name: ahc-pkg
+ -- XXX Version number
+ Version: 8.10.7
+ Copyright: XXX
+@@ -20,7 +20,7 @@
+     Default: True
+     Manual: False
+
+-Executable ghc-pkg
++Executable ahc-pkg
+     Default-Language: Haskell2010
+     Main-Is: Main.hs
+     Other-Extensions: CPP
+@@ -32,7 +32,7 @@
+                    filepath,
+                    Cabal,
+                    binary,
+-                   ghc-boot,
++                   ghc-boot-asterius,
+                    bytestring
+     if !os(windows) && flag(terminfo)
+         Build-Depends: terminfo

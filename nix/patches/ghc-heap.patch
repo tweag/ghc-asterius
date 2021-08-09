@@ -1,0 +1,9 @@
+--- a/libraries/ghc-heap/ghc-heap.cabal
++++ b/libraries/ghc-heap/ghc-heap.cabal
+@@ -1,5 +1,5 @@
+ cabal-version:  3.0
+-name:           ghc-heap
++name:           ghc-heap-asterius
+ version:        8.10.7
+ license:        BSD-3-Clause
+ license-file:   LICENSE
