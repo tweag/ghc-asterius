@@ -1,0 +1,97 @@
+--- a/compiler/ghc.cabal
++++ b/compiler/ghc.cabal
+@@ -1,9 +1,10 @@
++Cabal-Version: 2.4
+ -- WARNING: ghc.cabal is automatically generated from ghc.cabal.in by
+ -- ./configure.  Make sure you are editing ghc.cabal.in, not ghc.cabal.
+ 
+-Name: ghc
++Name: ghc-asterius
+ Version: 8.10.7
+-License: BSD3
++License: BSD-3-Clause
+ License-File: LICENSE
+ Author: The GHC Team
+ Maintainer: glasgow-haskell-users@haskell.org
+@@ -18,11 +19,16 @@
+     through this package.
+ Category: Development
+ Build-Type: Simple
+-Cabal-Version: >=1.10
++
++Data-Files:
++    *.h
++    autogen/**/*.h
++    autogen/**/*.hs
++    autogen/**/*.hs-incl
+ 
+ Flag ghci
+     Description: Build GHCi support.
+-    Default: False
++    Default: True
+     Manual: True
+ 
+ Flag stage1
+@@ -53,7 +59,7 @@
+ Flag integer-gmp
+     Description: Use integer-gmp
+     Manual: True
+-    Default: False
++    Default: True
+ 
+ Flag dynamic-system-linker
+     Description: The system can load dynamic code. This is not the case for musl.
+@@ -63,6 +69,10 @@
+ Library
+     Default-Language: Haskell2010
+     Exposed: False
++    Include-Dirs: autogen
++    CPP-Options: -DGHCI -DSTAGE=2
++    CC-Options: -DTHREADED_RTS
++    hs-source-dirs: autogen
+ 
+     Build-Depends: base       >= 4.11 && < 4.15,
+                    deepseq    >= 1.4 && < 1.5,
+@@ -74,13 +84,13 @@
+                    containers >= 0.5 && < 0.7,
+                    array      >= 0.1 && < 0.6,
+                    filepath   >= 1   && < 1.5,
+-                   template-haskell == 2.16.*,
++                   template-haskell-asterius == 2.16.*,
+                    hpc        == 0.6.*,
+                    transformers == 0.5.*,
+-                   ghc-boot   == 8.10.7,
+-                   ghc-boot-th == 8.10.7,
+-                   ghc-heap   == 8.10.7,
+-                   ghci == 8.10.7
++                   ghc-boot-asterius   == 8.10.7,
++                   ghc-boot-th-asterius == 8.10.7,
++                   ghc-heap-asterius   == 8.10.7,
++                   ghci-asterius == 8.10.7
+ 
+     if os(windows)
+         Build-Depends: Win32  >= 2.3 && < 2.7
+@@ -159,10 +169,6 @@
+ 
+     Include-Dirs: . parser utils
+ 
+-    -- We need to set the unit id to ghc (without a version number)
+-    -- as it's magic.
+-    GHC-Options: -this-unit-id ghc
+-
+     if flag(stage1)
+         Include-Dirs: stage1
+     else
+@@ -209,6 +215,12 @@
+     Default-Extensions:
+         NoImplicitPrelude
+ 
++    Autogen-Modules:
++        Paths_ghc_asterius
++
++    Exposed-Modules:
++        Paths_ghc_asterius
++
+     Exposed-Modules:
+         GHC.Frontend.Ghc
+ 

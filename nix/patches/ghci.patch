@@ -1,0 +1,35 @@
+--- a/libraries/ghci/ghci.cabal
++++ b/libraries/ghci/ghci.cabal
+@@ -1,7 +1,7 @@
+ -- WARNING: ghci.cabal is automatically generated from ghci.cabal.in by
+ -- ../../configure.  Make sure you are editing ghci.cabal.in, not ghci.cabal.
+
+-name:           ghci
++name:           ghci-asterius
+ version:        8.10.7
+ license:        BSD3
+ license-file:   LICENSE
+@@ -19,7 +19,7 @@
+
+ Flag ghci
+     Description: Build GHCi support.
+-    Default: False
++    Default: True
+     Manual: True
+
+ source-repository head
+@@ -79,10 +79,10 @@
+         containers       >= 0.5 && < 0.7,
+         deepseq          == 1.4.*,
+         filepath         == 1.4.*,
+-        ghc-boot         == 8.10.7,
+-        ghc-boot-th      == 8.10.7,
+-        ghc-heap         == 8.10.7,
+-        template-haskell == 2.16.*,
++        ghc-boot-asterius         == 8.10.7,
++        ghc-boot-th-asterius      == 8.10.7,
++        ghc-heap-asterius         == 8.10.7,
++        template-haskell-asterius == 2.16.*,
+         transformers     == 0.5.*
+
+     if !os(windows)
