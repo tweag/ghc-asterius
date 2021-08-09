@@ -1,0 +1,52 @@
+name: validate
+
+on:
+  - push
+  - pull_request
+
+jobs:
+
+  validate:
+    name: validate-${{ matrix.os }}-${{ matrix.drv }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+        drv:
+          - nix/validate.nix
+          - nix/validate-32.nix
+    steps:
+
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: setup-nix
+        uses: cachix/install-nix-action@v14
+        with:
+          extra_nix_config: |
+            substituters = https://cache.nixos.org https://hydra.iohk.io
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=
+
+      - name: setup-cachix
+        uses: cachix/cachix-action@v10
+        with:
+          name: asterius
+          signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
+
+      - name: cachix-watch-store
+        run: |
+          cachix watch-store -c9 asterius &
+
+      - name: check
+        run: |
+          cp $(nix-build --keep-going --no-out-link ${{ matrix.drv }}) summary
+
+      - name: upload-artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: validate-summary-${{ matrix.os }}-${{ matrix.drv }}
+          path: summary
