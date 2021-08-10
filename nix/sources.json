@@ -34,5 +34,12 @@
         "type": "tarball",
         "url": "https://github.com/NixOS/nixpkgs/archive/82155ff501c7622cb2336646bb62f7624261f6d7.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "wasi-sdk": {
+        "branch": "main",
+        "repo": "https://github.com/tweag/wasi-sdk.git",
+        "rev": "e22a7185c8b6e8fcbb32228ff327c2aa284c1c4a",
+        "sha256": "1if5zbamai933fypdbmpjzlgswsaqlqydlmj6ma8pkn81qxvlahw",
+        "type": "git"
     }
 }
