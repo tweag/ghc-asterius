@@ -21,10 +21,10 @@ import System.FilePath
 
 -- Windows
 #if defined(mingw32_HOST_OS)
-import System.Environment (getExecutablePath)
+import System.Environment (getExecutablePath, lookupEnv)
 -- POSIX
 #elif defined(darwin_HOST_OS) || defined(linux_HOST_OS) || defined(freebsd_HOST_OS)
-import System.Environment (getExecutablePath)
+import System.Environment (getExecutablePath, lookupEnv)
 #endif
 
 -- | Expand occurrences of the @$topdir@ interpolation in a string.
@@ -44,8 +44,15 @@ expandPathVar _ _ [] = []
 
 -- | Calculate the location of the base dir
 getBaseDir :: IO (Maybe String)
+getBaseDir = do
+  mb_dir <- lookupEnv "AHC_LIBDIR"
+  case mb_dir of
+    Just _ -> pure mb_dir
+    _ -> getBaseDir'
+
+getBaseDir' :: IO (Maybe String)
 #if defined(mingw32_HOST_OS)
-getBaseDir = Just . (\p -> p </> "lib") . rootDir <$> getExecutablePath
+getBaseDir' = Just . (\p -> p </> "lib") . rootDir <$> getExecutablePath
   where
     -- locate the "base dir" when given the path
     -- to the real ghc executable (as opposed to symlink)
@@ -71,7 +78,7 @@ getBaseDir = Just . (\p -> p </> "lib") . rootDir <$> getExecutablePath
 -- the layout is changed, such that we have ghc-X.Y.Z/{bin,lib}
 -- this would need to be changed accordingly.
 --
-getBaseDir = Just . (\p -> p </> "lib") . takeDirectory . takeDirectory <$> getExecutablePath
+getBaseDir' = Just . (\p -> p </> "lib") . takeDirectory . takeDirectory <$> getExecutablePath
 #else
-getBaseDir = return Nothing
+getBaseDir' = return Nothing
 #endif
