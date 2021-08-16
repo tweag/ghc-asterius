@@ -55,11 +55,11 @@ codeOutput, codeOutput' :: DynFlags
            -> [(ForeignSrcLang, FilePath)]
            -- ^ additional files to be compiled with with the C compiler
            -> [InstalledUnitId]
-           -> Stream IO RawCmmGroup a                       -- Compiled C--
+           -> Stream IO RawCmmGroup ()                       -- Compiled C--
            -> IO (FilePath,
                   (Bool{-stub_h_exists-}, Maybe FilePath{-stub_c_exists-}),
                   [(ForeignSrcLang, FilePath)]{-foreign_fps-},
-                  a)
+                  ())
 
 codeOutput dflags = lookupHook codeOutputHook codeOutput' dflags dflags
 codeOutput' dflags this_mod filenm location foreign_stubs foreign_fps pkg_deps
