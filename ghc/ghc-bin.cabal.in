@@ -34,19 +34,7 @@ Executable ghc
 
     Main-Is: Main.hs
     Build-Depends: base       >= 4   && < 5,
-                   array      >= 0.1 && < 0.6,
-                   bytestring >= 0.9 && < 0.11,
-                   directory  >= 1   && < 1.4,
-                   process    >= 1   && < 1.7,
-                   filepath   >= 1   && < 1.5,
-                   transformers == 0.5.*,
-                   ghc-boot   == @ProjectVersionMunged@,
                    ghc        == @ProjectVersionMunged@
-
-    if os(windows)
-        Build-Depends: Win32  >= 2.3 && < 2.7
-    else
-        Build-Depends: unix   >= 2.7 && < 2.9
 
     C-Sources: hschooks.c
 
@@ -54,51 +42,9 @@ Executable ghc
                  -Wnoncanonical-monad-instances
                  -Wnoncanonical-monoid-instances
 
-    if flag(ghci)
-        -- NB: this is never built by the bootstrapping GHC+libraries
-        Build-depends:
-            containers     >= 0.5 && < 0.7,
-            deepseq        == 1.4.*,
-            ghc-prim       >= 0.5.0 && < 0.7,
-            ghci           == @ProjectVersionMunged@,
-            haskeline      == 0.8.*,
-            exceptions     == 0.10.*,
-            time           >= 1.8 && < 1.10
-        CPP-Options: -DHAVE_INTERNAL_INTERPRETER
-        GHC-Options: -fno-warn-name-shadowing
-        Other-Modules:
-            GHCi.Leak
-            GHCi.UI
-            GHCi.UI.Info
-            GHCi.UI.Monad
-            GHCi.UI.Tags
-            GHCi.Util
-        Other-Extensions:
-            BangPatterns
-            FlexibleInstances
-            LambdaCase
-            MagicHash
-            MultiWayIf
-            OverloadedStrings
-            RankNTypes
-            RecordWildCards
-            ScopedTypeVariables
-            UnboxedTuples
-            ViewPatterns
-
     -- The flag being True by default, this reflects the
     -- mk/config.mk.in logic for GhcThreaded (which ends up
     -- always being True as well). One can still opt out by
     -- disabling this flag.
     if flag(threaded)
       ghc-options: -threaded
-
-    Other-Extensions:
-        CPP
-        NondecreasingIndentation
-        TupleSections
-
-    -- This should match the default-extensions used in 'ghc.cabal'. This way,
-    -- GHCi can be used to load it all at once.
-    Default-Extensions:
-        NoImplicitPrelude
