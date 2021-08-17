@@ -97,6 +97,18 @@ Library
     if flag(ghci)
         CPP-Options: -DHAVE_INTERNAL_INTERPRETER
         Include-Dirs: ../rts/dist/build @FFIIncludeDir@
+        -- NB: this is never built by the bootstrapping GHC+libraries
+        Build-depends:
+            ghc-prim       >= 0.5.0 && < 0.7,
+            haskeline      == 0.8.*,
+            exceptions     == 0.10.*
+        Exposed-Modules:
+            GHCi.Leak
+            GHCi.UI
+            GHCi.UI.Info
+            GHCi.UI.Monad
+            GHCi.UI.Tags
+            GHCi.Util
 
     -- sanity-check to ensure not more than one integer flag is set
     if flag(integer-gmp) && flag(integer-simple)
@@ -196,6 +208,9 @@ Library
     -- we use an explicit Prelude
     Default-Extensions:
         NoImplicitPrelude
+
+    Exposed-Modules:
+        GHC.Frontend.Ghc
 
     Exposed-Modules:
         HieTypes
