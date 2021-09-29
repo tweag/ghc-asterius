@@ -79,9 +79,8 @@ pkgs.callPackage
         "_build/stage0/libraries/ghc-boot/build/GHC/Platform/Host.hs"
         "_build/stage0/libraries/ghc-boot/build/GHC/Version.hs"
       ];
-      ghc_prim_autogen_files = [
-        "_build/stage0/libraries/ghc-prim/build/GHC/PrimopWrappers.hs"
-      ];
+      ghc_prim_autogen_files =
+        [ "_build/stage0/libraries/ghc-prim/build/GHC/PrimopWrappers.hs" ];
       boot_autogen_files = [
         "_build/stage0/lib/llvm-passes"
         "_build/stage0/lib/llvm-targets"
@@ -89,13 +88,11 @@ pkgs.callPackage
         "_build/stage0/lib/settings"
         "_build/stage0/lib/template-hsc.h"
       ];
-      rts_autogen_files = [
-        "_build/stage0/rts/build/cmm/AutoApply.cmm"
-      ];
+      rts_autogen_files = [ "_build/stage0/rts/build/cmm/AutoApply.cmm" ];
       ghc-lib-asterius = stdenv.mkDerivation {
         name = "ghc-lib-asterius";
         src = ghc_src;
-        outputs = ["out" "boot"];
+        outputs = [ "out" "boot" ];
         nativeBuildInputs = [
           alex
           autoconf
@@ -106,11 +103,21 @@ pkgs.callPackage
           happy
           python3
         ];
-        preConfigure = "python3 ./boot --hadrian";
-        configureFlags = [ "--disable-tables-next-to-code" ];
+        preConfigure = ''
+          python3 ./boot --hadrian
+          configureFlagsArray+=(
+            "--disable-tables-next-to-code"
+            "--with-hs-cpp=cc"
+            "--with-hs-cpp-flags=-E -undef -traditional -DASTERIUS"
+            "CONF_CC_OPTS_STAGE2=-DASTERIUS"
+            "CONF_CXX_OPTS_STAGE2=-DASTERIUS"
+          )
+        '';
         buildPhase = ''
           hadrian -j$NIX_BUILD_CORES --flavour=quickest --integer-simple ${
-            lib.concatStringsSep " " (ghc_autogen_files ++ ghc_boot_autogen_files ++ ghc_prim_autogen_files ++ boot_autogen_files ++ rts_autogen_files)
+            lib.concatStringsSep " " (ghc_autogen_files ++ ghc_boot_autogen_files
+              ++ ghc_prim_autogen_files ++ boot_autogen_files
+              ++ rts_autogen_files)
           }
         '';
         installPhase = ''
