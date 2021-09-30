@@ -435,9 +435,13 @@
    HP_CHK_P(bytes);                             \
    TICK_ALLOC_HEAP_NOCTR(bytes);
 
+#if defined(ASTERIUS)
+#define CHECK_GC() 0
+#else
 #define CHECK_GC()                                                      \
   (bdescr_link(CurrentNursery) == NULL ||                               \
    generation_n_new_large_words(W_[g0]) >= TO_W_(CLong[large_alloc_lim]))
+#endif
 
 // allocate() allocates from the nursery, so we check to see
 // whether the nursery is nearly empty in any function that uses
@@ -747,6 +751,10 @@
 #define END_TSO_QUEUE             stg_END_TSO_QUEUE_closure
 #define STM_AWOKEN                stg_STM_AWOKEN_closure
 
+#if defined(ASTERIUS)
+#define recordMutableCap(p, gen)
+#define recordMutable(p)
+#else
 #define recordMutableCap(p, gen)                                        \
   W_ __bd;                                                              \
   W_ mut_list;                                                          \
@@ -772,6 +780,7 @@
       __bd = Bdescr(__p);                                       \
       __gen = TO_W_(bdescr_gen_no(__bd));                       \
       if (__gen > 0) { recordMutableCap(__p, __gen); }
+#endif
 
 /* -----------------------------------------------------------------------------
    Update remembered set write barrier
