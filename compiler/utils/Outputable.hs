@@ -1243,7 +1243,7 @@ warnPprTrace True   file  line  msg x
 -- line number. Should typically be accessed with the ASSERT family of macros
 assertPprPanic :: HasCallStack => String -> Int -> SDoc -> a
 assertPprPanic _file _line msg
-  = pprPanic "ASSERT failed!" msg
+  = pprPanic ("ASSERT failed in " ++ _file ++ ", line " ++ show _line) msg
 
 pprDebugAndThen :: DynFlags -> (String -> a) -> SDoc -> SDoc -> a
 pprDebugAndThen dflags cont heading pretty_msg
