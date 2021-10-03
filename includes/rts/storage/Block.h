@@ -34,13 +34,8 @@
 #define BLOCK_SIZE_W (BLOCK_SIZE/sizeof(W_))
 #define BLOCK_MASK   (BLOCK_SIZE-1)
 
-#if defined(CMINUSMINUS)
-#define BLOCK_ROUND_UP(p)   ((p+BLOCK_SIZE-1) & ~BLOCK_MASK)
-#define BLOCK_ROUND_DOWN(p) ((p & ~BLOCK_MASK))
-#else
 #define BLOCK_ROUND_UP(p)   (((W_)(p)+BLOCK_SIZE-1) & ~BLOCK_MASK)
 #define BLOCK_ROUND_DOWN(p) ((void *) ((W_)(p) & ~BLOCK_MASK))
-#endif
 
 /* Megablock related constants (MBLOCK_SHIFT is defined in Constants.h) */
 
@@ -178,7 +173,13 @@ typedef struct bdescr_ {
 
 /* Finding the block descriptor for a given block -------------------------- */
 
-#if !defined(CMINUSMINUS)
+#if defined(CMINUSMINUS)
+
+#define Bdescr(p) \
+    ((((p) &  MBLOCK_MASK & ~BLOCK_MASK) >> (BLOCK_SHIFT-BDESCR_SHIFT)) \
+     | ((p) & ~MBLOCK_MASK))
+
+#else
 
 EXTERN_INLINE bdescr *Bdescr(StgPtr p);
 EXTERN_INLINE bdescr *Bdescr(StgPtr p)
@@ -195,13 +196,8 @@ EXTERN_INLINE bdescr *Bdescr(StgPtr p)
 
 /* Offset of first real data block in a megablock */
 
-#if defined(CMINUSMINUS)
-#define FIRST_BLOCK_OFF \
-   (BLOCK_ROUND_UP(BDESCR_SIZE * (MBLOCK_SIZE / BLOCK_SIZE)))
-#else
 #define FIRST_BLOCK_OFF \
    ((W_)BLOCK_ROUND_UP(BDESCR_SIZE * (MBLOCK_SIZE / BLOCK_SIZE)))
-#endif
 
 /* First data block in a given megablock */
 
@@ -213,13 +209,8 @@ EXTERN_INLINE bdescr *Bdescr(StgPtr p)
 
 /* First real block descriptor in a megablock */
 
-#if defined(CMINUSMINUS)
-#define FIRST_BDESCR(m) \
-   ((FIRST_BLOCK_OFF>>(BLOCK_SHIFT-BDESCR_SHIFT)) + m)
-#else
 #define FIRST_BDESCR(m) \
    ((bdescr *)((FIRST_BLOCK_OFF>>(BLOCK_SHIFT-BDESCR_SHIFT)) + (W_)(m)))
-#endif
 
 /* Last real block descriptor in a megablock */
 
@@ -242,12 +233,6 @@ EXTERN_INLINE bdescr *Bdescr(StgPtr p)
 #define BLOCKS_TO_MBLOCKS(n) \
    (1 + (W_)MBLOCK_ROUND_UP((n-BLOCKS_PER_MBLOCK) * BLOCK_SIZE) / MBLOCK_SIZE)
 
-/* Finding the block descriptor for a given block (custom asterius macro) -- */
-
-#if defined(CMINUSMINUS)
-#define Bdescr(p) \
-    ((p & ~MBLOCK_MASK) + FIRST_BDESCR(0))
-#endif
 
 #if !defined(CMINUSMINUS)
 /* to the end... */
