@@ -28,7 +28,7 @@ needing to run the program, by inspecting the object file using 'nm'.
 import Control.Monad (when, unless)
 import Data.Bits (shiftL)
 import Data.Char (toLower)
-import Data.List (stripPrefix, intercalate)
+import Data.List (elemIndex, stripPrefix, intercalate)
 import Data.Map (Map)
 import qualified Data.Map as Map
 import Data.Maybe (catMaybes, mapMaybe, fromMaybe)
@@ -691,15 +691,21 @@ getWanted verbose os tmpdir gccProgram gccFlags nmProgram mobjdumpProgram
              cFile = tmpdir </> "tmp.c"
              oFile = tmpdir </> "tmp.o"
          writeFile cFile cStuff
-         execute verbose gccProgram (gccFlags ++ ["-c", cFile, "-o", oFile])
+         execute verbose gccProgram (gccFlags ++ (
+             case os of
+                 "wasi" -> ["-emit-llvm", "-S"]
+                 _ -> ["-c"]
+             ) ++ [cFile, "-o", oFile])
          xs <- case os of
                  "openbsd" -> readProcess objdumpProgam ["--syms", oFile] ""
                  "aix"     -> readProcess objdumpProgam ["--syms", oFile] ""
+                 "wasi"    -> readFile oFile
                  _         -> readProcess nmProgram ["-P", oFile] ""
 
          let ls = lines xs
              m = Map.fromList $ case os of
                  "aix" -> parseAixObjdump ls
+                 "wasi" -> mapMaybe parseLLLine ls
                  _     -> mapMaybe parseNmLine ls
 
          case Map.lookup "CONTROL_GROUP_CONST_291" m of
@@ -777,6 +783,13 @@ getWanted verbose os tmpdir gccProgram gccFlags nmProgram mobjdumpProgram
           doWanted (ClosureFieldMacro {}) = []
           doWanted (ClosurePayloadMacro {}) = []
           doWanted (FieldTypeGcptrMacro {}) = []
+
+          parseLLLine line = case words line of
+            ('@' : prefix_sym) : ts -> do
+                sym <- stripPrefix prefix prefix_sym
+                i <- elemIndex "x" ts
+                pure (sym, read (tail (ts !! (i - 1))))
+            _ -> Nothing
 
           -- parseNmLine parses "nm -P" output that looks like
           -- "derivedConstantMAX_Vanilla_REG C 0000000b 0000000b" (GNU nm)
@@ -973,4 +986,3 @@ execute verbose prog args
       ec <- rawSystem prog args
       unless (ec == ExitSuccess) $
           die ("Executing " ++ show prog ++ " failed")
-
