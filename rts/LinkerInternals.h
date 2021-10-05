@@ -397,8 +397,6 @@ void freeSegments(ObjectCode *oc);
 #elif defined(darwin_HOST_OS) || defined(ios_HOST_OS)
 #  define OBJFORMAT_MACHO
 #  include "linker/MachOTypes.h"
-#else
-#error "Unknown OBJECT_FORMAT for HOST_OS"
 #endif
 
 /* In order to simplify control flow a bit, some references to mmap-related
