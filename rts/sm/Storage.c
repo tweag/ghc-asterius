@@ -293,7 +293,7 @@ void storageAddCapabilities (uint32_t from, uint32_t to)
     for (n = from; n < to; n++) {
         for (g = 1; g < RtsFlags.GcFlags.generations; g++) {
             capabilities[n]->mut_lists[g] =
-                allocBlockOnNode(capNoToNumaNode(n));
+                allocGroupOnNode(capNoToNumaNode(n), 1);
         }
     }
 
@@ -1023,7 +1023,7 @@ allocateMightFail (Capability *cap, W_ n)
             // The nursery is empty: allocate a fresh block (we can't
             // fail here).
             ACQUIRE_SM_LOCK;
-            bd = allocBlockOnNode(cap->node);
+            bd = allocGroupOnNode(cap->node, 1);
             cap->r.rNursery->n_blocks++;
             RELEASE_SM_LOCK;
             initBdescr(bd, g0, g0);
@@ -1144,7 +1144,7 @@ allocatePinned (Capability *cap, W_ n)
             // The nursery is empty: allocate a fresh block (we can't fail
             // here).
             ACQUIRE_SM_LOCK;
-            bd = allocBlockOnNode(cap->node);
+            bd = allocGroupOnNode(cap->node, 1);
             RELEASE_SM_LOCK;
             initBdescr(bd, g0, g0);
         } else {
