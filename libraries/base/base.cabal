@@ -319,6 +319,10 @@ Library
         Type.Reflection.Unsafe
         Unsafe.Coerce
 
+        Asterius.Magic
+        Asterius.TopHandler
+        Asterius.Types
+
     other-modules:
         Control.Monad.ST.Imp
         Control.Monad.ST.Lazy.Imp
@@ -336,6 +340,14 @@ Library
         System.Environment.ExecutablePath
         System.CPUTime.Utils
 
+        Asterius.Types.JSArray
+        Asterius.Types.JSException
+        Asterius.Types.JSFunction
+        Asterius.Types.JSObject
+        Asterius.Types.JSString
+        Asterius.Types.JSUint8Array
+        Asterius.Types.JSVal
+
     c-sources:
         cbits/DarwinUtils.c
         cbits/PrelIOUtils.c
@@ -352,6 +364,7 @@ Library
 
     cmm-sources:
         cbits/CastFloatWord.cmm
+        cbits/JSVal.cmm
 
     include-dirs: include
     includes:
