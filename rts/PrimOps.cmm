@@ -1008,9 +1008,13 @@ stg_forkzh ( gcptr closure )
 
     gcptr threadid;
 
+#if defined(ASTERIUS)
+    ("ptr" threadid) = ccall createIOThread( closure "ptr" );
+#else
     ("ptr" threadid) = ccall createIOThread( MyCapability() "ptr",
                                   TO_W_(RtsFlags_GcFlags_initialStkSize(RtsFlags)),
                                   closure "ptr");
+#endif
 
     /* start blocked if the current thread is blocked */
     StgTSO_flags(threadid) = %lobits16(
@@ -1032,10 +1036,14 @@ again: MAYBE_GC(again);
 
     gcptr threadid;
 
+#if defined(ASTERIUS)
+    ("ptr" threadid) = ccall createIOThread( closure "ptr" );
+#else
     ("ptr" threadid) = ccall createIOThread(
         MyCapability() "ptr",
         TO_W_(RtsFlags_GcFlags_initialStkSize(RtsFlags)),
-        closure "ptr");
+                                  closure "ptr");
+#endif
 
     /* start blocked if the current thread is blocked */
     StgTSO_flags(threadid) = %lobits16(
@@ -2040,7 +2048,9 @@ stg_makeStableNamezh ( P_ obj )
     W_ index, sn_obj;
 
     MAYBE_GC_P(stg_makeStableNamezh, obj);
-
+#if defined(ASTERIUS)
+    (sn_obj) = ccall makeStableName (obj "ptr");
+#else
     (index) = ccall lookupStableName(obj "ptr");
 
     /* Is there already a StableName for this heap object?
@@ -2068,6 +2078,7 @@ stg_makeStableNamezh ( P_ obj )
     } else {
         sn_obj = snEntry_sn_obj(W_[stable_name_table] + index*SIZEOF_snEntry);
     }
+#endif
 
     return (sn_obj);
 }
@@ -2083,7 +2094,11 @@ stg_makeStablePtrzh ( P_ obj )
 stg_deRefStablePtrzh ( P_ sp )
 {
     W_ r;
+#if defined(ASTERIUS)
+    ("ptr" r) = ccall deRefStablePtr(sp "ptr");
+#else
     r = spEntry_addr(W_[stable_ptr_table] + sp*SIZEOF_spEntry);
+#endif
     return (r);
 }
 
@@ -2286,7 +2301,9 @@ stg_delayzh ( W_ us_delay )
 
 #else
 
-
+#if defined(ASTERIUS)
+    StgTSO_block_info(CurrentTSO) = us_delay;
+#else
     (target) = ccall getDelayTarget(us_delay);
 
     StgTSO_block_info(CurrentTSO) = target;
@@ -2307,6 +2324,8 @@ while:
     } else {
         ccall setTSOLink(MyCapability() "ptr", prev "ptr", CurrentTSO);
     }
+#endif
+
     jump stg_block_noregs();
 #endif
 #endif /* !THREADED_RTS */
