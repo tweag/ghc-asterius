@@ -324,36 +324,10 @@ gen_map_mblocks (W_ size)
 void *
 osGetMBlocks(uint32_t n)
 {
-  void *ret;
-  W_ size = MBLOCK_SIZE * (W_)n;
-
-  if (next_request == 0) {
-      // use gen_map_mblocks the first time.
-      ret = gen_map_mblocks(size);
-  } else {
-      ret = my_mmap_or_barf(next_request, size, MEM_RESERVE_AND_COMMIT);
-
-      if (((W_)ret & MBLOCK_MASK) != 0) {
-          // misaligned block!
-#if 0 // defined(DEBUG)
-          errorBelch("warning: getMBlock: misaligned block %p returned "
-                     "when allocating %d megablock(s) at %p",
-                     ret, n, next_request);
-#endif
-
-          // unmap this block...
-          if (munmap(ret, size) == -1) {
-              barf("getMBlock: munmap failed");
-          }
-          // and do it the hard way
-          ret = gen_map_mblocks(size);
-      }
+    void *ret = aligned_alloc(MBLOCK_SIZE, MBLOCK_SIZE * n);
+    if (ret == NULL) {
+        barf("osGetMBlocks: aligned_alloc returned NULL");
   }
-
-  // Next time, we'll try to allocate right after the block we just got.
-  // ToDo: check that we haven't already grabbed the memory at next_request
-  next_request = (char *)ret + size;
-
   return ret;
 }
 

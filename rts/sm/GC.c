@@ -970,7 +970,6 @@ GarbageCollect (uint32_t collect_gen,
       got = mblocks_allocated;
 
       if (got > need) {
-          returnMemoryToOS(got - need);
       }
   }
 
