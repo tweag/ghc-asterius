@@ -169,7 +169,6 @@ topHandlerFastExit err =
 --
 real_handler :: (Int -> IO a) -> SomeException -> IO a
 real_handler exit se = do
-  flushStdHandles -- before any error output
   case fromException se of
       Just StackOverflow -> do
            reportStackOverflow
