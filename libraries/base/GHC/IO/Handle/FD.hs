@@ -6,7 +6,7 @@
 -- Module      :  GHC.IO.Handle.FD
 -- Copyright   :  (c) The University of Glasgow, 1994-2008
 -- License     :  see libraries/base/LICENSE
--- 
+--
 -- Maintainer  :  libraries@haskell.org
 -- Stability   :  internal
 -- Portability :  non-portable
@@ -15,7 +15,7 @@
 --
 -----------------------------------------------------------------------------
 
-module GHC.IO.Handle.FD ( 
+module GHC.IO.Handle.FD (
   stdin, stdout, stderr,
   openFile, openBinaryFile, openFileBlocking,
   mkHandleFromFD, fdToHandle, fdToHandle', handleToFd
@@ -52,7 +52,7 @@ stdin = unsafePerformIO $ do
    -- ToDo: acquire lock
    setBinaryMode FD.stdin
    enc <- getLocaleEncoding
-   mkHandle FD.stdin "<stdin>" ReadHandle True (Just enc)
+   mkHandle FD.stdin "<stdin>" ReadHandle False (Just enc)
                 nativeNewlineMode{-translate newlines-}
                 (Just stdHandleFinalizer) Nothing
 
@@ -63,7 +63,7 @@ stdout = unsafePerformIO $ do
    -- ToDo: acquire lock
    setBinaryMode FD.stdout
    enc <- getLocaleEncoding
-   mkHandle FD.stdout "<stdout>" WriteHandle True (Just enc)
+   mkHandle FD.stdout "<stdout>" WriteHandle False (Just enc)
                 nativeNewlineMode{-translate newlines-}
                 (Just stdHandleFinalizer) Nothing
 
@@ -74,7 +74,7 @@ stderr = unsafePerformIO $ do
     -- ToDo: acquire lock
    setBinaryMode FD.stderr
    enc <- getLocaleEncoding
-   mkHandle FD.stderr "<stderr>" WriteHandle False{-stderr is unbuffered-} 
+   mkHandle FD.stderr "<stderr>" WriteHandle False{-stderr is unbuffered-}
                 (Just enc)
                 nativeNewlineMode{-translate newlines-}
                 (Just stdHandleFinalizer) Nothing
@@ -83,7 +83,7 @@ stdHandleFinalizer :: FilePath -> MVar Handle__ -> IO ()
 stdHandleFinalizer fp m = do
   h_ <- takeMVar m
   flushWriteBuffer h_
-  case haType h_ of 
+  case haType h_ of
       ClosedHandle -> return ()
       _other       -> closeTextCodecs h_
   putMVar m (ioe_finalizedHandle fp)
@@ -141,7 +141,7 @@ addFilePathToIOError fun fp ioe
 -- Note: if you will be working with files containing binary data, you'll want to
 -- be using 'openBinaryFile'.
 openFile :: FilePath -> IOMode -> IO Handle
-openFile fp im = 
+openFile fp im =
   catchException
     (openFile' fp im dEFAULT_OPEN_IN_BINARY_MODE True)
     (\e -> ioError (addFilePathToIOError "openFile" fp e))
@@ -208,7 +208,7 @@ mkHandleFromFD fd0 fd_type filepath iomode set_non_blocking mb_codec
   = do
 #if !defined(mingw32_HOST_OS)
     -- turn on non-blocking mode
-    fd <- if set_non_blocking 
+    fd <- if set_non_blocking
              then FD.setNonBlockingMode fd0 True
              else return fd0
 #else
@@ -220,18 +220,18 @@ mkHandleFromFD fd0 fd_type filepath iomode set_non_blocking mb_codec
            | otherwise       = noNewlineTranslation
 
     case fd_type of
-        Directory -> 
+        Directory ->
            ioException (IOError Nothing InappropriateType "openFile"
                            "is a directory" Nothing Nothing)
 
         Stream
            -- only *Streams* can be DuplexHandles.  Other read/write
            -- Handles must share a buffer.
-           | ReadWriteMode <- iomode -> 
+           | ReadWriteMode <- iomode ->
                 mkDuplexHandle fd filepath mb_codec nl
-                   
 
-        _other -> 
+
+        _other ->
            mkFileHandle fd filepath iomode mb_codec nl
 
 -- | Old API kept to avoid breaking clients
@@ -266,7 +266,7 @@ fdToHandle :: Posix.FD -> IO Handle
 fdToHandle fdint = do
    iomode <- Posix.fdGetMode fdint
    (fd,fd_type) <- FD.mkFD fdint iomode Nothing
-            False{-is_socket-} 
+            False{-is_socket-}
               -- NB. the is_socket flag is False, meaning that:
               --  on Windows we're guessing this is not a socket (XXX)
             False{-is_nonblock-}
@@ -274,7 +274,7 @@ fdToHandle fdint = do
               -- not put into non-blocking mode, because that would affect
               -- other users of the file descriptor
    let fd_str = "<file descriptor: " ++ show fd ++ ">"
-   mkHandleFromFD fd fd_type fd_str iomode False{-non-block-} 
+   mkHandleFromFD fd fd_type fd_str iomode False{-non-block-}
                   Nothing -- bin mode
 
 -- | Turn an existing Handle into a file descriptor. This function throws an
