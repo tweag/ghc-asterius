@@ -389,8 +389,7 @@ schedule (Capability *initialCapability, Task *task)
      * the user specified "context switch as often as possible", with
      * +RTS -C0
      */
-    if (RtsFlags.ConcFlags.ctxtSwitchTicks == 0
-        && !emptyThreadQueues(cap)) {
+    {
         RELAXED_STORE(&cap->context_switch, 1);
     }
 
