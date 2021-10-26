@@ -115,37 +115,19 @@ handle_tick(int unused STG_UNUSED)
 void
 initTimer(void)
 {
-    initProfTimer();
-    if (RtsFlags.MiscFlags.tickInterval != 0) {
-        initTicker(RtsFlags.MiscFlags.tickInterval, handle_tick);
-    }
-    SEQ_CST_STORE(&timer_disabled, 1);
 }
 
 void
 startTimer(void)
 {
-    if (atomic_dec(&timer_disabled) == 0) {
-        if (RtsFlags.MiscFlags.tickInterval != 0) {
-            startTicker();
-        }
-    }
 }
 
 void
 stopTimer(void)
 {
-    if (atomic_inc(&timer_disabled, 1) == 1) {
-        if (RtsFlags.MiscFlags.tickInterval != 0) {
-            stopTicker();
-        }
-    }
 }
 
 void
 exitTimer (bool wait)
 {
-    if (RtsFlags.MiscFlags.tickInterval != 0) {
-        exitTicker(wait);
-    }
 }
