@@ -724,7 +724,7 @@ allocBlockOnNode_lock(uint32_t node)
 {
     bdescr *bd;
     ACQUIRE_SM_LOCK;
-    bd = allocBlockOnNode(node);
+    bd = allocGroupOnNode(node, 1);
     RELEASE_SM_LOCK;
     return bd;
 }

@@ -1104,7 +1104,7 @@ new_gc_thread (uint32_t n, gc_thread *t)
         // but can't, because it uses gct which isn't set up at this point.
         // Hence, allocate a block for todo_bd manually:
         {
-            bdescr *bd = allocBlockOnNode(capNoToNumaNode(n));
+            bdescr *bd = allocGroupOnNode(capNoToNumaNode(n), 1);
                 // no lock, locks aren't initialised yet
             initBdescr(bd, ws->gen, ws->gen->to);
             bd->flags = BF_EVACUATED;
@@ -1593,7 +1593,7 @@ prepare_collected_gen (generation *gen)
             bdescr *old = RELAXED_LOAD(&capabilities[i]->mut_lists[g]);
             freeChain(old);
 
-            bdescr *new = allocBlockOnNode(capNoToNumaNode(i));
+            bdescr *new = allocGroupOnNode(capNoToNumaNode(i), 1);
             RELAXED_STORE(&capabilities[i]->mut_lists[g], new);
         }
     }
