@@ -40,13 +40,13 @@ jobs:
 
       - name: check
         run: |
-          nix-build --keep-going --no-out-link nix/check.nix
+          nix-build --keep-going --no-out-link nix/check-32.nix
 
       - name: push
         if: matrix.os == 'ubuntu-latest'
         run: |
           mkdir ${{ runner.temp }}/dist
-          cp -rT $(nix-build --no-out-link nix/src.nix) ${{ runner.temp }}/dist
+          cp -rT $(nix-build --no-out-link nix/src-32.nix) ${{ runner.temp }}/dist
           pushd ${{ runner.temp }}/dist
           git init -b dist/${{ github.ref }}
           git add --all
