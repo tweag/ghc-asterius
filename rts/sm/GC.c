@@ -1013,7 +1013,6 @@ GarbageCollect (uint32_t collect_gen,
 
       uint32_t returned = 0;
       if (got > need) {
-          returned = returnMemoryToOS(got - need);
       }
       traceEventMemReturn(cap, got, need, returned);
   }

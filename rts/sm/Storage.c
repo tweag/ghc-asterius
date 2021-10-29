@@ -335,7 +335,6 @@ void
 freeStorage (bool free_heap)
 {
     stgFree(generations);
-    if (free_heap) freeAllMBlocks();
 #if defined(THREADED_RTS)
     closeMutex(&sm_mutex);
 #endif
