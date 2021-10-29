@@ -36,10 +36,10 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "wasi-sdk": {
-        "branch": "main",
+        "branch": "dejavu",
         "repo": "https://github.com/tweag/wasi-sdk.git",
-        "rev": "5063ecbfa1f82dcb9f613e59e12a8d57740eb94b",
-        "sha256": "0ifwywq3f1vynsqwyzp9y0qchn6dkpx9jnn81j829nqkcs9xbjk1",
+        "rev": "b3dd2b50625ae8b41a29e4bed7612c89f11c530e",
+        "sha256": "1xmpnd4vxp4qxfk66bb6gg4njcl4nz9xm00zwfp414ymx8hd2gbr",
         "type": "git"
     }
 }
