@@ -70,6 +70,7 @@ pkgs.pkgsi686Linux.callPackage
         util-linux
         which
       ];
+      hardeningDisable = [ "all" ];
       preConfigure = "./boot --hadrian";
       configureFlags = [
         "--enable-unregisterised"
