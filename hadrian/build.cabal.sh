@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+exec hadrian "$@"
+
 CABAL=cabal
 CABFLAGS="--disable-documentation --disable-profiling --disable-library-profiling $CABFLAGS"
 
