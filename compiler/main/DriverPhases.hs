@@ -218,13 +218,13 @@ nextPhase dflags p
       LlvmLlc    -> LlvmMangle
       LlvmMangle -> As False
       As _       -> MergeForeign
-      Ccxx       -> As False
-      Cc         -> As False
-      Cobjc      -> As False
-      Cobjcxx    -> As False
+      Ccxx       -> MergeForeign
+      Cc         -> MergeForeign
+      Cobjc      -> MergeForeign
+      Cobjcxx    -> MergeForeign
       CmmCpp     -> Cmm
       Cmm        -> maybeHCc
-      HCc        -> As False
+      HCc        -> MergeForeign
       MergeForeign -> StopLn
       StopLn     -> panic "nextPhase: nothing after StopLn"
     where maybeHCc = if platformUnregisterised (targetPlatform dflags)

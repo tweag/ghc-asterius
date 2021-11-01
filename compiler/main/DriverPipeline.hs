@@ -1327,8 +1327,12 @@ runPhase (RealPhase cc_phase) input_fn dflags
                    | otherwise            = []
 
         -- Decide next phase
-        let next_phase = As False
+        next_phase <- maybeMergeForeign
         output_fn <- phaseOutputFilename next_phase
+
+        -- we create directories for the object file, because it
+        -- might be a hierarchical module.
+        liftIO $ createDirectoryIfMissing True (takeDirectory output_fn)
 
         let
           more_hcc_opts =
@@ -1349,10 +1353,12 @@ runPhase (RealPhase cc_phase) input_fn dflags
 
         ghcVersionH <- liftIO $ getGhcVersionPathName dflags
 
-        liftIO $ SysTools.runCc (phaseForeignLanguage cc_phase) dflags (
-                        [ SysTools.FileOption "" input_fn
+        liftIO $ withAtomicRename output_fn $ \temp_outputFilename -> do
+          SysTools.runCc (phaseForeignLanguage cc_phase) dflags (
+                        [ SysTools.Option "-c"
+                        , SysTools.FileOption "" input_fn
                         , SysTools.Option "-o"
-                        , SysTools.FileOption "" output_fn
+                        , SysTools.FileOption "" temp_outputFilename
                         ]
                        ++ map SysTools.Option (
                           pic_c_flags
@@ -1387,7 +1393,6 @@ runPhase (RealPhase cc_phase) input_fn dflags
                              then gcc_extra_viac_flags ++ more_hcc_opts
                              else [])
                        ++ verbFlags
-                       ++ [ "-S" ]
                        ++ cc_opt
                        ++ [ "-include", ghcVersionH ]
                        ++ framework_paths
