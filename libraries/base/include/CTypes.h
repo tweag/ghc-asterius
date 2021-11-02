@@ -21,24 +21,24 @@
 #define OPAQUE_CLASSES Eq,Ord,Storable
 
 #define ARITHMETIC_TYPE(T,B) \
-newtype T = T B deriving (ARITHMETIC_CLASSES) \
+newtype T = T (B) deriving (ARITHMETIC_CLASSES) \
                 deriving newtype (Read, Show);
 
 #define INTEGRAL_TYPE(T,B) \
-newtype T = T B deriving (ARITHMETIC_CLASSES, INTEGRAL_CLASSES) \
+newtype T = T (B) deriving (ARITHMETIC_CLASSES, INTEGRAL_CLASSES) \
                 deriving newtype (Read, Show);
 
 #define INTEGRAL_TYPE_WITH_CTYPE(T,THE_CTYPE,B) \
-newtype {-# CTYPE "THE_CTYPE" #-} T = T B \
+newtype {-# CTYPE "THE_CTYPE" #-} T = T (B) \
     deriving (ARITHMETIC_CLASSES, INTEGRAL_CLASSES) \
     deriving newtype (Read, Show);
 
 #define FLOATING_TYPE(T,B) \
-newtype T = T B deriving (ARITHMETIC_CLASSES, FLOATING_CLASSES) \
+newtype T = T (B) deriving (ARITHMETIC_CLASSES, FLOATING_CLASSES) \
                 deriving newtype (Read, Show);
 
 #define FLOATING_TYPE_WITH_CTYPE(T,THE_CTYPE,B) \
-newtype {-# CTYPE "THE_CTYPE" #-} T = T B \
+newtype {-# CTYPE "THE_CTYPE" #-} T = T (B) \
     deriving (ARITHMETIC_CLASSES, FLOATING_CLASSES) \
     deriving newtype (Read, Show);
 
