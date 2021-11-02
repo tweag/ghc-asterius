@@ -147,7 +147,7 @@ AC_DEFUN([FPTOOLS_CHECK_HTYPE_ELSE],[
             AC_COMPILE_IFELSE(
                 [AC_LANG_PROGRAM(
                     [FPTOOLS_HTYPE_INCLUDES],
-                    [$1 val; *val;]
+                    [$1 val; memset(val, 0, 0);]
                 )],
                 [HTYPE_IS_POINTER=yes],
                 [HTYPE_IS_POINTER=no])
