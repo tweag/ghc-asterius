@@ -115,8 +115,8 @@ pkgs.callPackage
           "--enable-unregisterised"
           "--with-hs-cpp=$CC"
           "--with-hs-cpp-flags=-E -undef -traditional"
-          "CONF_CC_OPTS_STAGE2=-DASTERIUS"
-          "CONF_CXX_OPTS_STAGE2=-DASTERIUS"
+          "CONF_CC_OPTS_STAGE2=-DASTERIUS -D_WASI_EMULATED_PROCESS_CLOCKS -D_WASI_EMULATED_SIGNAL"
+          "CONF_CXX_OPTS_STAGE2=-DASTERIUS -D_WASI_EMULATED_PROCESS_CLOCKS -D_WASI_EMULATED_SIGNAL"
         )
       '';
       buildPhase = ''
