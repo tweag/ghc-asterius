@@ -471,7 +471,11 @@ INLINE int __hscore_sig_setmask( void )
 #if !defined(_WIN32)
 INLINE size_t __hscore_sizeof_siginfo_t (void)
 {
+#if defined(ASTERIUS)
+    barf("__hscore_sizeof_siginfo_t");
+#else
     return sizeof(siginfo_t);
+#endif
 }
 #endif
 
