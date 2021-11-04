@@ -259,10 +259,22 @@ pkgs.callPackage
         tar xf dist-newstyle/sdist/*.tar.gz --strip-components=1 -C $boot/deepseq
         popd
 
+        pushd libraries/bytestring
+        cabal v2-sdist
+        mkdir $boot/bytestring
+        tar xf dist-newstyle/sdist/*.tar.gz --strip-components=1 -C $boot/bytestring
+        popd
+
         pushd libraries/time
         cabal v2-sdist
         mkdir $boot/time
         tar xf dist-newstyle/sdist/*.tar.gz --strip-components=1 -C $boot/time
+        popd
+
+        pushd libraries/unix
+        cabal v2-sdist
+        mkdir $boot/unix
+        tar xf dist-newstyle/sdist/*.tar.gz --strip-components=1 -C $boot/unix
         popd
 
         pushd libraries/ghc-heap
