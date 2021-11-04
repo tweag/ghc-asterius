@@ -97,6 +97,7 @@ pkgs.callPackage
     stdenvNoCC.mkDerivation ({
       name = "ghc-lib-asterius";
       src = ghc_src;
+      patches = [ ./patches/time.diff ];
       outputs = [ "out" "boot" ];
       nativeBuildInputs = [
         alex
@@ -244,6 +245,24 @@ pkgs.callPackage
         cabal v2-sdist
         mkdir $boot/base
         tar xf dist-newstyle/sdist/*.tar.gz --strip-components=1 -C $boot/base
+        popd
+
+        pushd libraries/array
+        cabal v2-sdist
+        mkdir $boot/array
+        tar xf dist-newstyle/sdist/*.tar.gz --strip-components=1 -C $boot/array
+        popd
+
+        pushd libraries/deepseq
+        cabal v2-sdist
+        mkdir $boot/deepseq
+        tar xf dist-newstyle/sdist/*.tar.gz --strip-components=1 -C $boot/deepseq
+        popd
+
+        pushd libraries/time
+        cabal v2-sdist
+        mkdir $boot/time
+        tar xf dist-newstyle/sdist/*.tar.gz --strip-components=1 -C $boot/time
         popd
 
         pushd libraries/ghc-heap

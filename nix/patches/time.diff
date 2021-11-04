@@ -1,0 +1,50 @@
+--- a/libraries/time/lib/Data/Time/Clock/Internal/CTimespec.hsc
++++ b/libraries/time/lib/Data/Time/Clock/Internal/CTimespec.hsc
+@@ -1,3 +1,5 @@
++{-# LANGUAGE CApiFFI #-}
++
+ module Data.Time.Clock.Internal.CTimespec where
+ 
+ #include "HsTimeConfig.h"
+@@ -14,7 +16,7 @@
+ 
+ #include <time.h>
+ 
+-type ClockID = #{type clockid_t}
++type ClockID = CUIntPtr
+ 
+ data CTimespec = MkCTimespec CTime CLong
+ 
+@@ -35,7 +37,7 @@
+     clock_getres :: ClockID -> Ptr CTimespec -> IO CInt
+ 
+ -- | Get the resolution of the given clock.
+-clockGetRes :: #{type clockid_t} -> IO (Either Errno CTimespec)
++clockGetRes :: ClockID -> IO (Either Errno CTimespec)
+ clockGetRes clockid = alloca $ \ptspec -> do
+     rc <- clock_getres clockid ptspec
+     case rc of
+@@ -53,8 +55,7 @@
+     peek ptspec
+     )
+ 
+-clock_REALTIME :: ClockID
+-clock_REALTIME = #{const CLOCK_REALTIME}
++foreign import capi unsafe "time.h value CLOCK_REALTIME" clock_REALTIME :: ClockID
+ 
+ clock_TAI :: ClockID
+ clock_TAI = #{const 11}
+--- a/libraries/time/time.cabal
++++ b/libraries/time/time.cabal
+@@ -99,9 +99,10 @@
+         install-includes:
+             HsTime.h
+     else
++        autogen-includes:
++            HsTimeConfig.h
+         install-includes:
+             HsTime.h
+-            HsTimeConfig.h
+ 
+ test-suite ShowDefaultTZAbbreviations
+     type: exitcode-stdio-1.0
