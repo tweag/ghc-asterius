@@ -98,6 +98,7 @@ pkgs.callPackage
       name = "ghc-lib-asterius";
       src = ghc_src;
       patches = [ ./patches/time.diff ];
+      postPatch = "cp ${sources.wasi-sdk}/src/config/config.* libraries/unix";
       outputs = [ "out" "boot" ];
       nativeBuildInputs = [
         alex
