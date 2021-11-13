@@ -5,7 +5,7 @@
  * Rts settings.
  *
  * NOTE: assumes #include "ghcconfig.h"
- * 
+ *
  * NB: THIS FILE IS INCLUDED IN NON-C CODE AND DATA!  #defines only please.
  *
  * To understand the structure of the RTS headers, see the wiki:
@@ -45,7 +45,7 @@
    Signals - supported on non-PAR versions of the runtime.  See RtsSignals.h.
    -------------------------------------------------------------------------- */
 
-#define RTS_USER_SIGNALS 1
+// #define RTS_USER_SIGNALS 1
 
 /* Profile spin locks */
 

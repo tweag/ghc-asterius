@@ -59,8 +59,6 @@ HsInt nocldstop = 0;
  * The table of signal handlers
  * -------------------------------------------------------------------------- */
 
-#if defined(RTS_USER_SIGNALS)
-
 /* SUP: The type of handlers is a little bit, well, doubtful... */
 StgInt *signal_handlers = NULL; /* Dynamically grown array of signal handlers */
 static StgInt nHandlers = 0;    /* Size of handlers array */
@@ -81,7 +79,9 @@ static Mutex sig_mutex; // protects signal_handlers, nHandlers
 void
 initUserSignals(void)
 {
+#if defined(RTS_USER_SIGNALS)
     sigemptyset(&userSignals);
+#endif
 #if defined(THREADED_RTS)
     initMutex(&sig_mutex);
 #endif
@@ -330,13 +330,17 @@ generic_handler(int sig USED_IF_THREADS,
 void
 blockUserSignals(void)
 {
+#if defined(RTS_USER_SIGNALS)
     sigprocmask(SIG_BLOCK, &userSignals, &savedSignals);
+#endif
 }
 
 void
 unblockUserSignals(void)
 {
+#if defined(RTS_USER_SIGNALS)
     sigprocmask(SIG_SETMASK, &savedSignals, NULL);
+#endif
 }
 
 bool
@@ -366,6 +370,7 @@ awaitUserSignals(void)
 int
 stg_sig_install(int sig, int spi, void *mask)
 {
+#if defined(RTS_USER_SIGNALS)
     sigset_t signals, osignals;
     struct sigaction action;
     StgInt previous_spi;
@@ -451,6 +456,9 @@ stg_sig_install(int sig, int spi, void *mask)
 
     RELEASE_LOCK(&sig_mutex);
     return previous_spi;
+#else
+    return STG_SIG_DFL;
+#endif
 }
 
 /* -----------------------------------------------------------------------------
@@ -493,18 +501,6 @@ startSignalHandlers(Capability *cap)
 
   unblockUserSignals();
 }
-#endif
-
-#else /* !RTS_USER_SIGNALS */
-StgInt
-stg_sig_install(StgInt sig STG_UNUSED,
-                StgInt spi STG_UNUSED,
-                void* mask STG_UNUSED)
-{
-  //barf("User signals not supported");
-  return STG_SIG_DFL;
-}
-
 #endif
 
 #if defined(RTS_USER_SIGNALS)
@@ -753,4 +749,10 @@ resetDefaultHandlers(void)
     set_sigtstp_action(false);
 }
 
-#endif /* RTS_USER_SIGNALS */
+#else /* RTS_USER_SIGNALS */
+
+void
+install_vtalrm_handler(int sig STG_UNUSED, TickProc handle_tick STG_UNUSED)
+{ }
+
+#endif
