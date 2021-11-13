@@ -38,8 +38,8 @@
     "wasi-sdk": {
         "branch": "dejavu",
         "repo": "https://github.com/tweag/wasi-sdk.git",
-        "rev": "15f61bfcec9ad930d25b7a2e73fdd77b06b27126",
-        "sha256": "12j3li9gsmiamprd2f7j7phxc8raln05w3dc9y9ikj57as2ry1kw",
+        "rev": "f3e5b0c2227016442f8906c8bdf22902783dad5b",
+        "sha256": "10kq1k6pfzm4lzsma0ln3izb3dqdxvkv3scwjs975mwzk2j7rpvv",
         "type": "git"
     }
 }
