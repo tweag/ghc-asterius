@@ -5,10 +5,10 @@
         "homepage": "https://input-output-hk.github.io/haskell.nix",
         "owner": "input-output-hk",
         "repo": "haskell.nix",
-        "rev": "91ec10c0321b75a79a4b6af69fdb30fa748ec0f7",
-        "sha256": "16jpv5g7m2d74f81rw35njh3aspmxvp3bfy6c96c1jlpmd78fjnd",
+        "rev": "9dd933d6e8cf5f0ac92c1fe694ef7d8895942310",
+        "sha256": "1d2i4i6lmagxvx83qq9aa8lf1sfpirdkzz12r52angxjgy5maj8q",
         "type": "tarball",
-        "url": "https://github.com/input-output-hk/haskell.nix/archive/91ec10c0321b75a79a4b6af69fdb30fa748ec0f7.tar.gz",
+        "url": "https://github.com/input-output-hk/haskell.nix/archive/9dd933d6e8cf5f0ac92c1fe694ef7d8895942310.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "hs-nix-tools": {
@@ -17,10 +17,10 @@
         "homepage": null,
         "owner": "TerrorJack",
         "repo": "hs-nix-tools",
-        "rev": "81012bfb17b8bde7a89a2bdda8ce313ef718c83b",
-        "sha256": "01hhadw9am3x94r76m70vf1wk5i95daal5691k7w8y9v3d2zflww",
+        "rev": "aec717326cb1443985dbff7f5c3141755f190896",
+        "sha256": "1qz4gp6l3x33gxcn1h64ppkd33plw5bripf957mp8x96hz7y05d5",
         "type": "tarball",
-        "url": "https://github.com/TerrorJack/hs-nix-tools/archive/81012bfb17b8bde7a89a2bdda8ce313ef718c83b.tar.gz",
+        "url": "https://github.com/TerrorJack/hs-nix-tools/archive/aec717326cb1443985dbff7f5c3141755f190896.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs": {
@@ -29,17 +29,17 @@
         "homepage": "https://github.com/NixOS/nixpkgs",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "36941818f25feb27700f25ce054322025209e264",
-        "sha256": "06dr3snhp0snapygpf2ys7srg9l3a50nhz48yrn8a6lkf0zv7l00",
+        "rev": "7fad01d9d5a3f82081c00fb57918d64145dc904c",
+        "sha256": "0g0jn8cp1f3zgs7xk2xb2vwa44gb98qlp7k0dvigs0zh163c2kim",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/36941818f25feb27700f25ce054322025209e264.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/7fad01d9d5a3f82081c00fb57918d64145dc904c.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "wasi-sdk": {
         "branch": "dejavu",
         "repo": "https://github.com/tweag/wasi-sdk.git",
-        "rev": "f3e5b0c2227016442f8906c8bdf22902783dad5b",
-        "sha256": "10kq1k6pfzm4lzsma0ln3izb3dqdxvkv3scwjs975mwzk2j7rpvv",
+        "rev": "771dbcfd37de093c69287d6a6c084cf5e2a5ba9f",
+        "sha256": "1a0dc0j5r0pff85zbc8kfshdfi0j208h44pa10n20xclmg2zvzh2",
         "type": "git"
     }
 }

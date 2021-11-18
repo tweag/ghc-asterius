@@ -55,6 +55,8 @@ pkgs.callPackage
           "--with-hs-cpp-flags=-E -undef -traditional"
           "CONF_CC_OPTS_STAGE2=-DASTERIUS"
           "CONF_CXX_OPTS_STAGE2=-DASTERIUS"
+          "CFLAGS=-D_WASI_EMULATED_PROCESS_CLOCKS"
+          "LDFLAGS=-lwasi-emulated-process-clocks"
         )
       '';
       buildPhase = ''
@@ -71,6 +73,7 @@ pkgs.callPackage
           -DHAVE_SIGNAL_H \
           -DHAVE_SYS_MMAN_H \
           -D_WASI_EMULATED_MMAN \
+          -D_WASI_EMULATED_PROCESS_CLOCKS \
           -D_WASI_EMULATED_SIGNAL \
           -Dsiginfo_t=char \
           -DNO_REGS \
@@ -97,7 +100,9 @@ pkgs.callPackage
           -Inix/rts \
           -Irts \
           -Wl,--compress-relocations \
+          -Wl,--error-limit=0 \
           -Wl,--export-table \
+          -Wl,--export=GarbageCollect \
           -Wl,--export=__hsbase_MD5Final \
           -Wl,--export=__hsbase_MD5Init \
           -Wl,--export=__hsbase_MD5Transform \
@@ -117,17 +122,44 @@ pkgs.callPackage
           -Wl,--strip-all \
           libraries/base/cbits/md5.c \
           nix/rts/rts.c \
+          rts/posix/GetTime.c \
           rts/posix/OSMem.c \
           rts/sm/BlockAlloc.c \
+          rts/sm/CNF.c \
+          rts/sm/Compact.c \
+          rts/sm/Evac.c \
           rts/sm/MBlock.c \
+          rts/sm/MarkWeak.c \
           rts/sm/GC.c \
+          rts/sm/GCAux.c \
+          rts/sm/GCUtils.c \
           rts/sm/NonMoving.c \
           rts/sm/NonMovingMark.c \
+          rts/sm/NonMovingScav.c \
+          rts/sm/NonMovingShortcut.c \
+          rts/sm/NonMovingSweep.c \
+          rts/sm/Scav.c \
           rts/sm/Storage.c \
+          rts/sm/Sweep.c \
+          rts/Arena.c \
           rts/Capability.c \
+          rts/CheckUnload.c \
+          rts/Hash.c \
+          rts/ProfHeap.c \
+          rts/RaiseAsync.c \
+          rts/RtsAPI.c \
           rts/RtsFlags.c \
           rts/RtsMessages.c \
           rts/RtsUtils.c \
+          rts/STM.c \
+          rts/Schedule.c \
+          rts/StableName.c \
+          rts/StablePtr.c \
+          rts/Stats.c \
+          rts/Task.c \
+          rts/ThreadLabels.c \
+          rts/Threads.c \
+          rts/Weak.c \
           rts/WSDeque.c \
           -o $out/bin/rts.wasm
       '';
