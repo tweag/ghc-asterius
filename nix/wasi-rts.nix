@@ -102,7 +102,6 @@ pkgs.callPackage
           -Wl,--compress-relocations \
           -Wl,--error-limit=0 \
           -Wl,--export-table \
-          -Wl,--export=GarbageCollect \
           -Wl,--export=__hsbase_MD5Final \
           -Wl,--export=__hsbase_MD5Init \
           -Wl,--export=__hsbase_MD5Transform \
