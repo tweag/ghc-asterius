@@ -1,6 +1,6 @@
 { sources ? import ./sources.nix { }
 , haskellNix ? import sources.haskell-nix { }
-, pkgs ? import sources.nixpkgs haskellNix.nixpkgsArgs
+, pkgs ? import haskellNix.sources.nixpkgs-unstable haskellNix.nixpkgsArgs
 }:
 pkgs.pkgsi686Linux.callPackage
   ({ autoconf
