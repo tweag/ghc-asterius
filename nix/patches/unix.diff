@@ -1,0 +1,317 @@
+Submodule libraries/unix contains modified content
+diff --git a/libraries/unix/System/Posix/IO.hsc b/libraries/unix/System/Posix/IO.hsc
+index ec510f7..fe37350 100644
+--- a/libraries/unix/System/Posix/IO.hsc
++++ b/libraries/unix/System/Posix/IO.hsc
+@@ -1,3 +1,9 @@
++#if defined(ASTERIUS)
++
++module System.Posix.IO where
++
++#else
++
+ #if __GLASGOW_HASKELL__ >= 709
+ {-# LANGUAGE Safe #-}
+ #else
+@@ -91,3 +97,5 @@ openFd name how maybe_mode flags = do
+ createFile :: FilePath -> FileMode -> IO Fd
+ createFile name mode
+   = openFd name WriteOnly (Just mode) defaultFileFlags{ trunc=True }
++
++#endif
+diff --git a/libraries/unix/System/Posix/IO/ByteString.hsc b/libraries/unix/System/Posix/IO/ByteString.hsc
+index 2ce5ed6..c9d4656 100644
+--- a/libraries/unix/System/Posix/IO/ByteString.hsc
++++ b/libraries/unix/System/Posix/IO/ByteString.hsc
+@@ -1,3 +1,9 @@
++#if defined(ASTERIUS)
++
++module System.Posix.IO.ByteString where
++
++#else
++
+ #if __GLASGOW_HASKELL__ >= 709
+ {-# LANGUAGE Safe #-}
+ #else
+@@ -91,3 +97,5 @@ openFd name how maybe_mode flags = do
+ createFile :: RawFilePath -> FileMode -> IO Fd
+ createFile name mode
+   = openFd name WriteOnly (Just mode) defaultFileFlags{ trunc=True }
++
++#endif
+diff --git a/libraries/unix/System/Posix/IO/Common.hsc b/libraries/unix/System/Posix/IO/Common.hsc
+index a838352..724d161 100644
+--- a/libraries/unix/System/Posix/IO/Common.hsc
++++ b/libraries/unix/System/Posix/IO/Common.hsc
+@@ -1,3 +1,9 @@
++#if defined(ASTERIUS)
++
++module System.Posix.IO.Common where
++
++#else
++
+ {-# LANGUAGE CApiFFI #-}
+ {-# LANGUAGE NondecreasingIndentation #-}
+ {-# LANGUAGE RecordWildCards #-}
+@@ -404,3 +410,5 @@ fdWriteBuf fd buf len =
+ 
+ foreign import ccall safe "write"
+    c_safe_write :: CInt -> Ptr CChar -> CSize -> IO CSsize
++
++#endif
+diff --git a/libraries/unix/System/Posix/Process.hsc b/libraries/unix/System/Posix/Process.hsc
+index afdb164..928f36d 100644
+--- a/libraries/unix/System/Posix/Process.hsc
++++ b/libraries/unix/System/Posix/Process.hsc
+@@ -1,3 +1,9 @@
++#if defined(ASTERIUS)
++
++module System.Posix.Process where
++
++#else
++
+ #if __GLASGOW_HASKELL__ >= 709
+ {-# LANGUAGE Safe #-}
+ #else
+@@ -123,3 +129,4 @@ foreign import ccall unsafe "execv"
+ foreign import ccall unsafe "execve"
+   c_execve :: CString -> Ptr CString -> Ptr CString -> IO CInt
+ 
++#endif
+diff --git a/libraries/unix/System/Posix/Process/ByteString.hsc b/libraries/unix/System/Posix/Process/ByteString.hsc
+index 39da5ba..dae2414 100644
+--- a/libraries/unix/System/Posix/Process/ByteString.hsc
++++ b/libraries/unix/System/Posix/Process/ByteString.hsc
+@@ -1,3 +1,9 @@
++#if defined(ASTERIUS)
++
++module System.Posix.Process.ByteString where
++
++#else
++
+ #if __GLASGOW_HASKELL__ >= 709
+ {-# LANGUAGE Safe #-}
+ #else
+@@ -134,3 +140,5 @@ foreign import ccall unsafe "execv"
+ 
+ foreign import ccall unsafe "execve"
+   c_execve :: CString -> Ptr CString -> Ptr CString -> IO CInt
++
++#endif
+diff --git a/libraries/unix/System/Posix/Process/Common.hsc b/libraries/unix/System/Posix/Process/Common.hsc
+index 7fb0823..49c274b 100644
+--- a/libraries/unix/System/Posix/Process/Common.hsc
++++ b/libraries/unix/System/Posix/Process/Common.hsc
+@@ -1,3 +1,9 @@
++#if defined(ASTERIUS)
++
++module System.Posix.Process.Common where
++
++#else
++
+ {-# LANGUAGE CApiFFI #-}
+ {-# LANGUAGE InterruptibleFFI, RankNTypes #-}
+ {-# LANGUAGE Trustworthy #-}
+@@ -418,3 +424,5 @@ setProcessGroupID pid pgid =
+   throwErrnoIfMinus1_ "setProcessGroupID" (c_setpgid pid pgid)
+ 
+ -- -----------------------------------------------------------------------------
++
++#endif
+diff --git a/libraries/unix/System/Posix/Resource.hsc b/libraries/unix/System/Posix/Resource.hsc
+index 309d394..bdeab1a 100644
+--- a/libraries/unix/System/Posix/Resource.hsc
++++ b/libraries/unix/System/Posix/Resource.hsc
+@@ -1,3 +1,9 @@
++#if defined(ASTERIUS)
++
++module System.Posix.Resource where
++
++#else
++
+ {-# LANGUAGE CApiFFI #-}
+ #if __GLASGOW_HASKELL__ >= 709
+ {-# LANGUAGE Safe #-}
+@@ -158,3 +164,5 @@ showRLim ResourceLimitInfinity = "infinity"
+ showRLim ResourceLimitUnknown  = "unknown"
+ showRLim (ResourceLimit other)  = show other
+ -}
++
++#endif
+diff --git a/libraries/unix/System/Posix/SharedMem.hsc b/libraries/unix/System/Posix/SharedMem.hsc
+index ab31764..b0f3507 100644
+--- a/libraries/unix/System/Posix/SharedMem.hsc
++++ b/libraries/unix/System/Posix/SharedMem.hsc
+@@ -1,3 +1,9 @@
++#if defined(ASTERIUS)
++
++module System.Posix.SharedMem where
++
++#else
++
+ #if __GLASGOW_HASKELL__ >= 709
+ {-# LANGUAGE Safe #-}
+ #else
+@@ -89,3 +95,5 @@ foreign import ccall unsafe "shm_open"
+ foreign import ccall unsafe "shm_unlink"
+         shm_unlink :: CString -> IO CInt
+ #endif
++
++#endif
+diff --git a/libraries/unix/System/Posix/Signals.hsc b/libraries/unix/System/Posix/Signals.hsc
+index f26765d..4590fe6 100644
+--- a/libraries/unix/System/Posix/Signals.hsc
++++ b/libraries/unix/System/Posix/Signals.hsc
+@@ -1,3 +1,9 @@
++#if defined(ASTERIUS)
++
++module System.Posix.Signals where
++
++#else
++
+ {-# LANGUAGE CApiFFI, CPP, DeriveDataTypeable, NondecreasingIndentation #-}
+ {-# OPTIONS_GHC -fno-cse #-} -- global variables
+ {-# LANGUAGE Trustworthy #-}
+@@ -617,3 +623,5 @@ foreign import capi unsafe "signal.h sigismember"
+ 
+ foreign import ccall unsafe "sigpending"
+   c_sigpending :: Ptr CSigset -> IO CInt
++
++#endif
+diff --git a/libraries/unix/System/Posix/Signals/Exts.hsc b/libraries/unix/System/Posix/Signals/Exts.hsc
+index 3634277..9d4dd80 100644
+--- a/libraries/unix/System/Posix/Signals/Exts.hsc
++++ b/libraries/unix/System/Posix/Signals/Exts.hsc
+@@ -1,3 +1,9 @@
++#if defined(ASTERIUS)
++
++module System.Posix.Signals.Exts where
++
++#else
++
+ {-# LANGUAGE CPP #-}
+ {-# LANGUAGE Safe #-}
+ 
+@@ -45,3 +51,5 @@ infoEvent = sigINFO
+ 
+ windowChange :: Signal
+ windowChange = sigWINCH
++
++#endif
+diff --git a/libraries/unix/System/Posix/Temp.hsc b/libraries/unix/System/Posix/Temp.hsc
+index 711a696..ca79a69 100644
+--- a/libraries/unix/System/Posix/Temp.hsc
++++ b/libraries/unix/System/Posix/Temp.hsc
+@@ -1,3 +1,9 @@
++#if defined(ASTERIUS)
++
++module System.Posix.Temp where
++
++#else
++
+ {-# LANGUAGE CApiFFI #-}
+ #if __GLASGOW_HASKELL__ >= 709
+ {-# LANGUAGE Safe #-}
+@@ -122,3 +128,4 @@ mktemp template = do
+     peekFilePath ptr
+ #endif
+ 
++#endif
+diff --git a/libraries/unix/System/Posix/Temp/ByteString.hsc b/libraries/unix/System/Posix/Temp/ByteString.hsc
+index f66f847..78b9213 100644
+--- a/libraries/unix/System/Posix/Temp/ByteString.hsc
++++ b/libraries/unix/System/Posix/Temp/ByteString.hsc
+@@ -1,3 +1,9 @@
++#if defined(ASTERIUS)
++
++module System.Posix.Temp.ByteString where
++
++#else
++
+ {-# LANGUAGE CApiFFI #-}
+ #if __GLASGOW_HASKELL__ >= 709
+ {-# LANGUAGE Safe #-}
+@@ -122,3 +128,4 @@ mktemp template = do
+     peekFilePath ptr
+ #endif
+ 
++#endif
+diff --git a/libraries/unix/System/Posix/Terminal.hsc b/libraries/unix/System/Posix/Terminal.hsc
+index 0545f40..0f8e16d 100644
+--- a/libraries/unix/System/Posix/Terminal.hsc
++++ b/libraries/unix/System/Posix/Terminal.hsc
+@@ -1,3 +1,9 @@
++#if defined(ASTERIUS)
++
++module System.Posix.Terminal where
++
++#else
++
+ {-# LANGUAGE CApiFFI #-}
+ #if __GLASGOW_HASKELL__ >= 709
+ {-# LANGUAGE Safe #-}
+@@ -217,3 +223,4 @@ c_unlockpt _ = return (fromIntegral 0)
+ #endif /* HAVE_PTSNAME */
+ #endif /* !HAVE_OPENPTY */
+ 
++#endif
+diff --git a/libraries/unix/System/Posix/Terminal/ByteString.hsc b/libraries/unix/System/Posix/Terminal/ByteString.hsc
+index cd6e200..03ac46f 100644
+--- a/libraries/unix/System/Posix/Terminal/ByteString.hsc
++++ b/libraries/unix/System/Posix/Terminal/ByteString.hsc
+@@ -1,3 +1,9 @@
++#if defined(ASTERIUS)
++
++module System.Posix.Terminal.ByteString where
++
++#else
++
+ {-# LANGUAGE CApiFFI #-}
+ #if __GLASGOW_HASKELL__ >= 709
+ {-# LANGUAGE Safe #-}
+@@ -224,3 +230,5 @@ c_unlockpt :: CInt -> IO CInt
+ c_unlockpt _ = return (fromIntegral (0::Int))
+ #endif /* HAVE_PTSNAME */
+ #endif /* !HAVE_OPENPTY */
++
++#endif
+diff --git a/libraries/unix/System/Posix/Terminal/Common.hsc b/libraries/unix/System/Posix/Terminal/Common.hsc
+index 2773158..e04984b 100644
+--- a/libraries/unix/System/Posix/Terminal/Common.hsc
++++ b/libraries/unix/System/Posix/Terminal/Common.hsc
+@@ -1,3 +1,9 @@
++#if defined(ASTERIUS)
++
++module System.Posix.Terminal.Common where
++
++#else
++
+ {-# LANGUAGE CApiFFI #-}
+ {-# LANGUAGE Trustworthy #-}
+ 
+@@ -724,3 +730,5 @@ withNewTermios termios action = do
+     _ <- action p1
+     return ()
+   return $ makeTerminalAttributes fp1
++
++#endif
+diff --git a/libraries/unix/System/Posix/User.hsc b/libraries/unix/System/Posix/User.hsc
+index 63bf466..93d1610 100644
+--- a/libraries/unix/System/Posix/User.hsc
++++ b/libraries/unix/System/Posix/User.hsc
+@@ -1,3 +1,9 @@
++#if defined(ASTERIUS)
++
++module System.Posix.User where
++
++#else
++
+ {-# LANGUAGE Trustworthy, CApiFFI #-}
+ -----------------------------------------------------------------------------
+ -- |
+@@ -472,3 +478,5 @@ throwErrnoIfNullAndError loc act = do
+     if rc == nullPtr && errno /= eOK
+        then throwErrno loc
+        else return rc
++
++#endif

@@ -1,0 +1,13 @@
+Submodule libraries/directory contains modified content
+diff --git a/libraries/directory/System/Directory/Internal/Posix.hsc b/libraries/directory/System/Directory/Internal/Posix.hsc
+index ba67480..ae72574 100644
+--- a/libraries/directory/System/Directory/Internal/Posix.hsc
++++ b/libraries/directory/System/Directory/Internal/Posix.hsc
+@@ -288,7 +288,6 @@ getHomeDirectoryInternal = do
+   e <- lookupEnv "HOME"
+   case e of
+        Just fp -> pure fp
+-       Nothing -> PU.homeDirectory <$> (PU.getEffectiveUserID >>= PU.getUserEntryForID)
+ 
+ getXdgDirectoryFallback :: IO FilePath -> XdgDirectory -> IO FilePath
+ getXdgDirectoryFallback getHomeDirectory xdgDir = do

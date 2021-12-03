@@ -97,8 +97,8 @@ pkgs.callPackage
     stdenvNoCC.mkDerivation ({
       name = "ghc-lib-asterius";
       src = ghc_src;
-      patches = [ ./patches/time.diff ];
-      postPatch = "cp ${sources.wasi-sdk}/src/config/config.* libraries/unix";
+      patches = [ ./patches/directory.diff ./patches/time.diff ./patches/unix.diff ];
+      postPatch = "cp ${wasi-sdk}/share/misc/config.* libraries/unix";
       outputs = [ "out" "boot" ];
       nativeBuildInputs = [
         alex
@@ -276,6 +276,18 @@ pkgs.callPackage
         cabal v2-sdist
         mkdir $boot/unix
         tar xf dist-newstyle/sdist/*.tar.gz --strip-components=1 -C $boot/unix
+        popd
+
+        pushd libraries/filepath
+        cabal v2-sdist
+        mkdir $boot/filepath
+        tar xf dist-newstyle/sdist/*.tar.gz --strip-components=1 -C $boot/filepath
+        popd
+
+        pushd libraries/directory
+        cabal v2-sdist
+        mkdir $boot/directory
+        tar xf dist-newstyle/sdist/*.tar.gz --strip-components=1 -C $boot/directory
         popd
 
         pushd libraries/ghc-heap
