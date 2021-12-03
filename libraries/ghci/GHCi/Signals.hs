@@ -14,6 +14,13 @@ import System.Posix.Signals
 import GHC.ConsoleHandler
 #endif
 
+#if defined(ASTERIUS)
+
+installSignalHandlers :: IO ()
+installSignalHandlers = fail "GHCi.Signals.installSignalHandlers"
+
+#else
+
 -- | Install standard signal handlers for catching ^C, which just throw an
 --   exception in the target thread.  The current target thread is the
 --   thread at the head of the list in the MVar passed to
@@ -45,3 +52,5 @@ installSignalHandlers = do
   _ <- installHandler (Catch sig_handler)
 #endif
   return ()
+
+#endif

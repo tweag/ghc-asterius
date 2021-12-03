@@ -6,7 +6,10 @@
 --
 -----------------------------------------------------------------------------
 
+#if defined(ASTERIUS)
+#else
 #include <ffi.h>
+#endif
 
 {-# LANGUAGE CPP, DeriveGeneric, DeriveAnyClass #-}
 module GHCi.FFI
@@ -44,6 +47,17 @@ data FFIConv
   | FFIStdCall
   deriving (Show, Generic, Binary)
 
+#if defined(ASTERIUS)
+
+data C_ffi_cif
+
+prepForeignCall :: FFIConv -> [FFIType] -> FFIType -> IO (Ptr C_ffi_cif)
+prepForeignCall _ _ _ = fail "GHCi.FFI.prepForeignCall"
+
+freeForeignCallInfo :: Ptr C_ffi_cif -> IO ()
+freeForeignCallInfo _ = fail "GHCi.FFI.freeForeignCallInfo"
+
+#else
 
 prepForeignCall
     :: FFIConv
@@ -149,3 +163,5 @@ foreign import ccall "ffi_prep_cif"
 --            -> Ptr ()                    -- put result here
 --            -> Ptr (Ptr ())              -- arg values
 --            -> IO ()
+
+#endif
