@@ -19,13 +19,7 @@ import Prelude -- See Note [Why do we import Prelude here?]
 import Data.List
 import System.FilePath
 
--- Windows
-#if defined(mingw32_HOST_OS)
 import System.Environment (getExecutablePath, lookupEnv)
--- POSIX
-#elif defined(darwin_HOST_OS) || defined(linux_HOST_OS) || defined(freebsd_HOST_OS)
-import System.Environment (getExecutablePath, lookupEnv)
-#endif
 
 -- | Expand occurrences of the @$topdir@ interpolation in a string.
 expandTopDir :: FilePath -> String -> String
