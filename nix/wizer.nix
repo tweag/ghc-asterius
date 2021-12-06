@@ -15,6 +15,11 @@ rustPlatform.buildRustPackage rec {
         "https://patch-diff.githubusercontent.com/raw/bytecodealliance/wizer/pull/36.diff";
       sha256 = "sha256-+llP5xHk3fuZ8vTPciRBiIc2vBmXBnGtK1CF6GoID6E=";
     })
+    (fetchpatch {
+      url =
+        "https://patch-diff.githubusercontent.com/raw/bytecodealliance/wizer/pull/37.diff";
+      sha256 = "sha256-qRAxDSS9+tSHP5YlAOC+aWwQoobyjXkWhWHuL8mWlWs=";
+    })
   ];
   cargoHash =
     "sha512-FZgHo0PDJnHr0RB/aJ1iMovmekUUpWf7S30W+a7cxSXxQGETgBJ5Gto0RvbZucwYmJ3QGljtxXJli+O2KystEw==";
