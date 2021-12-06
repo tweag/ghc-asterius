@@ -1,26 +1,23 @@
-{ autoPatchelfHook, fetchzip, lib, stdenv }:
-stdenv.mkDerivation rec {
-  name = "wizer";
+{ fetchFromGitHub, fetchpatch, lib, rustPlatform }:
+rustPlatform.buildRustPackage rec {
+  pname = "wizer";
   version = "1.3.4";
-  src = fetchzip {
-    x86_64-linux = {
+  src = fetchFromGitHub {
+    owner = "bytecodealliance";
+    repo = pname;
+    rev = "90a4f9edb3a145ec950f348730e6fd4ec2e31ed3";
+    sha256 = "sha256-0XTaF1k7O+MBpxPc0JVhEYw6VSkZ1NNP+re1Ttpwr1k=";
+    fetchSubmodules = true;
+  };
+  patches = [
+    (fetchpatch {
       url =
-        "https://github.com/bytecodealliance/wizer/releases/download/dev/wizer-dev-x86_64-linux.tar.xz";
-      hash =
-        "sha512-325/FchWIj3WUTE8RumT2NE77LHYQiA+pOgBTQh7HDXaMVwx7cMcFsKENrNzsFvDSdSd1haoJBDm7K5IN3PGJA==";
-    };
-    x86_64-darwin = {
-      url =
-        "https://github.com/bytecodealliance/wizer/releases/download/dev/wizer-dev-x86_64-macos.tar.xz";
-      hash =
-        "sha512-ET/bA6UxEztoLpYCPX3cB8cBDJveJPnZlVnSAOc9H4eVWhiqqdVqm/KIGZAjPdmeFoB4q9uBdX3V1eY4xFj0sg==";
-    };
-  }.${stdenv.hostPlatform.system};
-  nativeBuildInputs = lib.optionals stdenv.isLinux [ autoPatchelfHook ];
-  installPhase = ''
-    mkdir -p $out/bin
-    mv wizer $out/bin
-  '';
-  doInstallCheck = true;
-  installCheckPhase = "$out/bin/wizer --version";
+        "https://patch-diff.githubusercontent.com/raw/bytecodealliance/wizer/pull/36.diff";
+      sha256 = "sha256-+llP5xHk3fuZ8vTPciRBiIc2vBmXBnGtK1CF6GoID6E=";
+    })
+  ];
+  cargoHash =
+    "sha512-FZgHo0PDJnHr0RB/aJ1iMovmekUUpWf7S30W+a7cxSXxQGETgBJ5Gto0RvbZucwYmJ3QGljtxXJli+O2KystEw==";
+  doCheck = true;
+  preCheck = "export HOME=$(mktemp -d)";
 }
