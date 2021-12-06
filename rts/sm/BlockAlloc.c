@@ -375,7 +375,7 @@ split_block_low (bdescr *bd, W_ n)
  * blocks field of the first bdescr; callers are responsible for calling
  * initGroup afterwards.
  */
-static bdescr *
+bdescr *
 alloc_mega_group (uint32_t node, StgWord mblocks)
 {
     bdescr *best, *bd, *prev;
@@ -752,7 +752,7 @@ coalesce_mblocks (bdescr *p)
     return q;
 }
 
-static void
+void
 free_mega_group (bdescr *mg)
 {
     bdescr *bd, *prev;
