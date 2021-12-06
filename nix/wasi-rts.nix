@@ -106,14 +106,11 @@ pkgs.callPackage
           -Wl,--export=__hsbase_MD5Init \
           -Wl,--export=__hsbase_MD5Transform \
           -Wl,--export=__hsbase_MD5Update \
-          -Wl,--export=aligned_alloc \
-          -Wl,--export=allocGroup_lock \
+          -Wl,--export=allocGroup \
           -Wl,--export=allocate \
           -Wl,--export=allocatePinned \
-          -Wl,--export=free \
-          -Wl,--export=getMBlocks \
           -Wl,--export=memcpy \
-          -Wl,--export=freeGroup_lock \
+          -Wl,--export=freeGroup \
           -Wl,--export=rts_unsafeGetMyCapability \
           -Wl,--growable-table \
           -Wl,--lto-O3 \

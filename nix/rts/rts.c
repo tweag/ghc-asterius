@@ -17,21 +17,30 @@ noreturn StgFunPtr __stg_gc_enter_1(void) { barf("__stg_gc_enter_1"); }
 
 noreturn StgFunPtr __stg_gc_fun(void) { barf("__stg_gc_fun"); }
 
+extern struct __locale_struct __c_dot_utf8_locale;
+
+bdescr *alloc_mega_group (uint32_t, StgWord);
+void free_mega_group(bdescr*);
+
 __attribute__((export_name("wizer.initialize"))) void __wizer_initialize(void) {
+  uselocale(&__c_dot_utf8_locale);
   setbuf(stdin, NULL);
   setbuf(stdout, NULL);
+  
   initRtsFlagsDefaults();
   initCapabilities();
   initStorage();
+
   size_t size;
   scanf("%zu", &size);
-  uint8_t *p = aligned_alloc(8, size + 1);
+  uint8_t *p = aligned_alloc(8, size);
   if (p == NULL) {
     barf("__wizer_initialize: aligned_alloc returned NULL");
   }
   memset(p, 0, size);
-  memset(p + size, 1, 1);
   printf("%p", p);
+
+  free_mega_group(alloc_mega_group(0, 64));
 }
 
 StgClosure stg_END_STM_CHUNK_LIST_closure = {0};
