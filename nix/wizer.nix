@@ -18,6 +18,6 @@ rustPlatform.buildRustPackage rec {
   ];
   cargoHash =
     "sha512-FZgHo0PDJnHr0RB/aJ1iMovmekUUpWf7S30W+a7cxSXxQGETgBJ5Gto0RvbZucwYmJ3QGljtxXJli+O2KystEw==";
-  doCheck = true;
+  cargoBuildFlags = [ "--bin=wizer" "--features=env_logger,structopt" ];
   preCheck = "export HOME=$(mktemp -d)";
 }
