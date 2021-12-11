@@ -107,8 +107,6 @@ pkgs.callPackage
           -Wl,--export=__hsbase_MD5Transform \
           -Wl,--export=__hsbase_MD5Update \
           -Wl,--export=allocGroup \
-          -Wl,--export=allocate \
-          -Wl,--export=allocatePinned \
           -Wl,--export=memcpy \
           -Wl,--export=freeGroup \
           -Wl,--export=rts_unsafeGetMyCapability \
