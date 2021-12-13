@@ -24,19 +24,19 @@ pkgs.callPackage
           subDir = "hadrian";
         };
         compiler-nix-name = ghc_boot_ver;
-        modules = (import ./modules.nix) ++ [{ reinstallableLibGhc = true; }];
+        modules = [{ reinstallableLibGhc = true; }];
       }).hadrian.components.exes.hadrian;
       alex = haskell-nix.hackage-tool {
         name = "alex";
         version = "3.2.6";
         compiler-nix-name = ghc_boot_ver;
-        modules = import ./modules.nix;
+        index-state = haskell-nix.internalHackageIndexState;
       };
       happy = haskell-nix.hackage-tool {
         name = "happy";
         version = "1.19.12";
         compiler-nix-name = ghc_boot_ver;
-        modules = import ./modules.nix;
+        index-state = haskell-nix.internalHackageIndexState;
       };
       wasi-sdk = import "${sources.wasi-sdk}/nix/default.nix" { };
       ghc_stage0_autogen_files = [

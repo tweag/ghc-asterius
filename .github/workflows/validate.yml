@@ -15,7 +15,6 @@ jobs:
         os:
           - ubuntu-latest
         drv:
-          - nix/validate.nix
           - nix/validate-32.nix
     steps:
 
@@ -25,7 +24,7 @@ jobs:
           submodules: recursive
 
       - name: setup-nix
-        uses: cachix/install-nix-action@v14.1
+        uses: cachix/install-nix-action@v16
         with:
           extra_nix_config: |
             substituters = https://cache.nixos.org https://hydra.iohk.io

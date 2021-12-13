@@ -5,10 +5,10 @@
         "homepage": "https://input-output-hk.github.io/haskell.nix",
         "owner": "input-output-hk",
         "repo": "haskell.nix",
-        "rev": "b2479523c0bafc9a6ce63cafefd38a110dd01331",
-        "sha256": "0i77m8348klzqh2hry7gmykmkk3ngdnabnfjja2mwpynazpgvvzh",
+        "rev": "e95a1f0dacbc64603c31d11e36e4ba1af8f0eb43",
+        "sha256": "160cf7ha2c5wkbymy3h4skzw1l3x4i8dhj2arvq3bdz92gg1d6cb",
         "type": "tarball",
-        "url": "https://github.com/input-output-hk/haskell.nix/archive/b2479523c0bafc9a6ce63cafefd38a110dd01331.tar.gz",
+        "url": "https://github.com/input-output-hk/haskell.nix/archive/e95a1f0dacbc64603c31d11e36e4ba1af8f0eb43.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "hs-nix-tools": {
@@ -17,17 +17,17 @@
         "homepage": null,
         "owner": "TerrorJack",
         "repo": "hs-nix-tools",
-        "rev": "c674bc038d151bb41fe2570b1af0558014859f41",
-        "sha256": "0s2jdr921g4r6zb96ms5y83fn30hnh3pil2d5lqikcrndijkkap8",
+        "rev": "bc5ca48ba3680986ac7d6f63de0cabded9fb01ba",
+        "sha256": "1bh05msqfhl7hrr1pspgvi0gfazm8bx8cy86zp6n5wni6l1r90s7",
         "type": "tarball",
-        "url": "https://github.com/TerrorJack/hs-nix-tools/archive/c674bc038d151bb41fe2570b1af0558014859f41.tar.gz",
+        "url": "https://github.com/TerrorJack/hs-nix-tools/archive/bc5ca48ba3680986ac7d6f63de0cabded9fb01ba.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "wasi-sdk": {
         "branch": "dejavu",
         "repo": "https://github.com/tweag/wasi-sdk.git",
-        "rev": "91119cf54859867ea4e24faf1821035f956acf0b",
-        "sha256": "07jkxvxwxgwh03gqr7v0505dymw8dlz71ij2fcspkmivgprqgpw7",
+        "rev": "224631f266555102fb737aec9f39aa1578cc0ce4",
+        "sha256": "07pcs6hsba512mi0zah478zpbvp5bs19pfwm7v1asmhks8dprpqs",
         "type": "git"
     }
 }

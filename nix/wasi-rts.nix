@@ -24,19 +24,19 @@ pkgs.callPackage
           subDir = "hadrian";
         };
         compiler-nix-name = ghc_boot_ver;
-        modules = (import ./modules.nix) ++ [{ reinstallableLibGhc = true; }];
+        modules = [{ reinstallableLibGhc = true; }];
       }).hadrian.components.exes.hadrian;
       alex = haskell-nix.hackage-tool {
         name = "alex";
         version = "3.2.6";
         compiler-nix-name = ghc_boot_ver;
-        modules = import ./modules.nix;
+        index-state = haskell-nix.internalHackageIndexState;
       };
       happy = haskell-nix.hackage-tool {
         name = "happy";
         version = "1.19.12";
         compiler-nix-name = ghc_boot_ver;
-        modules = import ./modules.nix;
+        index-state = haskell-nix.internalHackageIndexState;
       };
       libdir_stage1_autogen_files =
         [ "_build/stage1/lib/ghcautoconf.h" "_build/stage1/lib/ghcplatform.h" ];
@@ -107,9 +107,13 @@ pkgs.callPackage
           -Wl,--export=__hsbase_MD5Transform \
           -Wl,--export=__hsbase_MD5Update \
           -Wl,--export=allocGroup \
+          -Wl,--export=memchr \
           -Wl,--export=memcpy \
           -Wl,--export=freeGroup \
+          -Wl,--export=getcwd \
+          -Wl,--export=getenv \
           -Wl,--export=rts_unsafeGetMyCapability \
+          -Wl,--export=strlen \
           -Wl,--growable-table \
           -Wl,--lto-O3 \
           -Wl,--stack-first \

@@ -37,19 +37,19 @@ pkgs.pkgsi686Linux.callPackage
           subDir = "hadrian";
         };
         compiler-nix-name = ghc_boot_ver;
-        modules = (import ./modules.nix) ++ [{ reinstallableLibGhc = true; }];
+        modules = [{ reinstallableLibGhc = true; }];
       }).hadrian.components.exes.hadrian;
       alex = haskell-nix.hackage-tool {
         name = "alex";
         version = "3.2.6";
         compiler-nix-name = ghc_boot_ver;
-        modules = import ./modules.nix;
+        index-state = haskell-nix.internalHackageIndexState;
       };
       happy = haskell-nix.hackage-tool {
         name = "happy";
         version = "1.19.12";
         compiler-nix-name = ghc_boot_ver;
-        modules = import ./modules.nix;
+        index-state = haskell-nix.internalHackageIndexState;
       };
     in
     stdenv.mkDerivation {
