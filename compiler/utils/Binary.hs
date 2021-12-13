@@ -42,6 +42,8 @@ module Binary
 
    putAt, getAt,
 
+   putPrim,
+
    -- * For writing instances
    putByte,
    getByte,
