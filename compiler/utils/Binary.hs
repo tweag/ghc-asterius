@@ -22,7 +22,7 @@
 --     http://www.cs.york.ac.uk/fp/nhc98/
 
 module Binary
-  ( {-type-}  Bin,
+  ( {-type-}  Bin(..),
     {-class-} Binary(..),
     {-type-}  BinHandle,
     SymbolTable, Dictionary,
